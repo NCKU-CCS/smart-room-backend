@@ -9,6 +9,7 @@ from .model import Device
 
 class DeviceResource(Resource):
     """Device Management"""
+
     # TODO: GET, PUT Device
 
     def __init__(self):

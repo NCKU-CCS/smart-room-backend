@@ -17,8 +17,6 @@ class GatewayResource(Resource):
     def __init__(self):
         # Add Gateway
         self._set_post_parser()
-        # Gateway Change Name
-        self._set_put_parser()
 
     def _set_post_parser(self):
         self.post_parser = reqparse.RequestParser()

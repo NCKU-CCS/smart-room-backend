@@ -4,6 +4,7 @@ import secrets
 from config import db
 from utils.base_models import BaseMixin
 
+
 @dataclass
 class User(db.Model, BaseMixin):
     __tablename__ = "user"
