@@ -1,0 +1,49 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[[source]]
+name = "tap"
+url = "http://pypi.19gale.ai:9999/simple"
+verify_ssl = false
+
+[dev-packages]
+pytest = "==6.1.2"
+pytest-cov = "==2.10.1"
+pytest-flask = "==1.1.0"
+flask-script = "==2.0.6"
+flask-migrate = "==2.5.2"
+pylint = "==2.3.1"
+flake8 = "==3.7.8"
+black = "==19.3b0"
+pre-commit = "==2.5.1"
+commitizen = "==1.23.0"
+mypy = "==0.790"
+isort = "==4.3.21"
+pylint-flask-sqlalchemy = "*"
+
+[packages]
+requests = "==2.22.0"
+python-dotenv = "==0.10.3"
+psycopg2-binary = "==2.8.3"
+Flask = "==1.1.1"
+flask-restful = "==0.3.8"
+flask-httpauth = "==3.3.0"
+flask-sqlalchemy = "==2.4.1"
+loguru = "==0.4.1"
+pytz = "==2019.3"
+redis = "==3.5.3"
+dataclasses-json = "==0.5.2"
+pandas = "==1.1.2"
+ipykernel = "*"
+plotly = "*"
+scikit-learn = "*"
+nbformat = "*"
+keras = "*"
+tensorflow = "*"
+pydot = "*"
+graphviz = "*"
+
+[requires]
+python_version = "3.7"
