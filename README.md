@@ -2,30 +2,30 @@
 
 Smart Room Control and Data Collect Service
 
-+ (api)[./api]: Main API Server
++ [api](./api): Main API Server
     + Flask API Server
     + Data Collect
     + Device Control
     + User Management
 
-+ (controller)[./controller]: A/C Controller
++ [controller](./controller): A/C Controller
     + Socket Server
     + Receive Command
     + Token Authentication
     + IR Remote Control
 
-+ (sensor)[./sensor]: Sensors
++ [sensor](./sensor): Sensors
     + Python3.7 Script and Arduino Script
     + Data Collect
-        + (meter.py)[./sensor/meter.py]: Smart Meter via Modbus Communication
-        + (thermo_sensor.py)[./sensor/thermo_sensor.py]: DHT Temperature and Humidity Sensor
-        + (sct-013.ino)[./sensor/Arduino/sct013.ino]: SCT-013 GET Current Data using Arduino
-        + (read_arduino.py)[read_arduino.py]: Read CT data from Arduino via serial signal
+        + [meter.py](./sensor/meter.py): Smart Meter via Modbus Communication
+        + [thermo_sensor.py](./sensor/thermo_sensor.py): DHT Temperature and Humidity Sensor
+        + [sct-013.ino](./sensor/Arduino/sct013.ino): SCT-013 GET Current Data using Arduino
+        + [read_arduino.py](./sensor/read_arduino.py): Read CT data from Arduino via serial signal
 
 
 ## API Document
 
-Document: Not Yet
+Document: TBD
 
 ## Getting Started
 
