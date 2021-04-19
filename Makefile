@@ -5,7 +5,6 @@ PKG=api
 init: clean
 	pipenv --python 3.7
 	pipenv install
-	# pipenv install --dev
 
 dev: init
 	pipenv install --dev
