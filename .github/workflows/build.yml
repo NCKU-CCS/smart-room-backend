@@ -10,5 +10,4 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build docker image
       run: |
-        cp sample.env .env
         docker-compose build
