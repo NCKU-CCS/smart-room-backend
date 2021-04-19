@@ -5,39 +5,36 @@ from loguru import logger
 import minimalmodbus
 
 from save_data import upload_data
-from modbus import word_list_to_long, decode_ieee, OBSERVE_REGS_MAP
+from modbus import OBSERVE_REGS_MAP
 from config import MODBUS_PORT
 
 
-def get_data(com, data_map, data_length):
-    raw_data = list()
-    # GET DATA
-    for reg in data_map:
-        logger.debug(f"[GET DATA] address: {reg}")
-        data = send_command(com, reg, data_length)
-        raw_data += data
-    if data_length == 1:
-        return raw_data
-    # Decode Int to Float
-    return [decode_ieee(f) for f in word_list_to_long(raw_data)]
+def get_float_data(com: minimalmodbus.Instrument, reg: str) -> float:
+    """send get float data command
 
+    Args:
+        com (minimalmodbus.Instrument): instrument object
+        reg (str): register in hex
 
-def send_command(com, reg, length):
+    Returns:
+        float: value
+    """
     while True:
         try:
-            regs = com.read_registers(int(reg, 0), length)
+            regs = com.read_float(int(reg, 0))
             break
         except Exception as err:
-            logger.debug(f"[Failed to Read Register] address: {reg}, length: {length}. Error: {err}")
+            logger.debug(f"[Failed to Read Float] address: {reg}. Error: {err}")
             time.sleep(1)
     return regs
 
 
-def scan(com, map_table, length, loop, timebreak=1):
+def scan(com, map_table, loop, timebreak=1):
     # Re-try timeout set
     now_minute = datetime.now().minute
     while True:
-        datas = get_data(com, map_table.keys(), length)
+        # GET Data
+        datas = [get_float_data(com, reg) for reg in map_table.keys()]
         map_data = dict()
         # Log ata
         logger.info(datetime.utcnow())
@@ -59,8 +56,8 @@ def main():
     instrument = minimalmodbus.Instrument(MODBUS_PORT, 1)
     instrument.serial.baudrate = 9600
     # Loop Monitor
-    # scan(instrument, OBSERVE_REGS_MAP, 2, loop=True)
-    data = scan(instrument, OBSERVE_REGS_MAP, 2, loop=False)
+    # scan(instrument, OBSERVE_REGS_MAP, loop=True)
+    data = scan(instrument, OBSERVE_REGS_MAP, loop=False)
     upload_data(data)
 
 

@@ -3,7 +3,7 @@ PKG=api
 .PHONY: all clean version init flake8 pylint lint test coverage
 
 init: clean
-	pipenv --python 3.6
+	pipenv --python 3.7
 	pipenv install
 	# pipenv install --dev
 
@@ -29,7 +29,7 @@ isort:
 lint: flake8 pylint
 
 build:
-	docker build -t smart_room ${PKG} --no-cache
+	docker-compose build
 
 run:
 	pipenv run python ${PKG}/app.py
