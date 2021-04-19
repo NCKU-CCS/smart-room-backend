@@ -1,0 +1,36 @@
+name: Integration
+
+on: push
+
+jobs:
+  integration:
+    runs-on: ubuntu-16.04
+    container: python:3.7.7-slim
+
+    services:
+      redis:
+        image: redis
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: database
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_PASSWORD: password
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        ls -la
+        apt update && apt upgrade -y && apt install -y make redis-tools postgresql-client git
+        python -m pip install --upgrade pip
+        pip install pipenv
+        redis-cli -h redis CONFIG SET requirepass "password"
+        make dev
+    - name: run linting command
+      run: |
+        make lint

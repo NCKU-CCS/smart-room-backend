@@ -1,5 +1,7 @@
 # smart room
 
+![Integration](https://github.com/NCKU-CCS/smart-room-backend/workflows/Integration/badge.svg)
+
 Smart Room Control and Data Collect Service
 
 + [api](./api): Main API Server

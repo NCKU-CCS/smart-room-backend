@@ -5,11 +5,10 @@ PKG=api
 init: clean
 	pipenv --python 3.7
 	pipenv install
-	# pipenv install --dev
 
 dev: init
 	pipenv install --dev
-	pipenv run pre-commit install -t commit-msg
+	# pipenv run pre-commit install -t commit-msg
 
 commit:
 	pipenv run cz commit
