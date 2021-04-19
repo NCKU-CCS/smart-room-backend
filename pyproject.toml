@@ -4,6 +4,9 @@ version = "0.0.1"
 tag_format = "$version"
 changelog_incremental = true
 update_changelog_on_bump = true
+version_files = [
+    "apiary.apib:API-version",
+]
 
 [tool.black]
 line-length = 120
