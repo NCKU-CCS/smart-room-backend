@@ -1,0 +1,494 @@
+FORMAT: 1A
+HOST: http://140.116.247.124:10150
+
+# SMART ROOM API Document
+
+Smart Room back-end API
+
+API-version: 0.0.2
+
+# Common
+
+## Login [/login]
+
+Used to login platform.
+
+### Login [POST]
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/login" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "account": "netdb",
+  "password": "netdb2602"
+}'
+</pre>
+
++ Request (application/json)
+    + Attributes
+        + account: `test` (string, required) - Login Account
+        + password: `test` (string, required) - Account's Password
+
++ Response 200 (application/json)
+    + Attributes
+        + token: `429ec8b19da2f4af86fe010e4c4850e051e419de25d06c846e352eba46036c72` - Authentication Bearer Token
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Unauthorized Access` - error message
+
+## User [/user]
+
+User Account Management
+
+### Get User [GET]
+
+Get user data.
+
+<pre>
+curl "http://140.116.247.124:10150/user" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes
+        + uuid: `31ca7c42-a125-11eb-99de-8c8590002bb6` (string) - user uuid
+        + account: `ACCOUNT` (string) - account name
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `error` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+### Create User [POST]
+
+Create user account.
+
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/user" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "account": "USER",
+  "password": "PASSWD"
+}'
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
+    + Attributes
+        + account: `TEST123` (string, required) - user account
+        + password: `2020-01-01` (string, required) - user password
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Account created` - success
+        + token: `7d41361fbfe0ff2e7d5598f8c7021a45f300467260776fd07b1bb35cbd42126f` - Bearer token
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
++ Response 409 (application/json)
+    + Attributes
+        + error: `Account already exists` - error message
+
+### Update User [PUT]
+
+Update user password.
+
+<pre>
+curl -X "PUT" "http://140.116.247.124:10150/user" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "original_password": "OLDPASSWD",
+  "new_password": "NEWPASSWD"
+}'
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
+    + Attributes
+        + original_password: `OLDPASSWD` (string, required) - original password
+        + new_password: `NEWPASSWD` (string, required) - new password
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Accept` - success
+        + token: `1d8de44e322da45bea3c36efb89e8b1d04e1f9ba8105839b80f061b3f2ebc2bf` - new token
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `Reject` - original password error
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+## Sensor [/sensor]
+
+Sensor Management
+
+### Get Sensors [GET /sensor{?name,location,device_type}]
+
+Get sensors.
+
+<pre>
+curl "http://140.116.247.124:10150/sensor?name=Sensor1&location=floor1&device_type=DHT11" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Parameters
+    + name: `Sensor1` (string) - sensor name
+    + location: `floor1` (string) - sensor location
+    + device_type: `DHT11` (string) - sensor device type
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes
+        + uuid: `31ca7c42-a125-11eb-99de-8c8590002bb6` (string) - sensor uuid
+        + name: `Sensor1` (string) - sensor name
+        + location: `floor1` (string) - sensor location
+        + device_type: `DHT11` (string) - sensor device type
+        + created: `Wed, 17 Feb 2021 13:43:26 GMT` (string) - sensor create time
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `error` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+### Create Sensor [POST]
+
+Create sensor.
+
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/sensor" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "name": "Sensor2",
+  "location": "floor2",
+  "device_type": "DHT22"
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
+    + Attributes
+        + name: `Sensor2` (string, required) - sensor name
+        + location: `floor2` (string, required) - sensor location
+        + device_type: `DHT22` (string, required) - sensor device type
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - success
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+## Sensor Data [/sensor_data]
+
+Sensor Data
+
+### Get Sensor Data [GET /sensor_data{?name,location}]
+
+Get sensors.
+
+<pre>
+curl "http://140.116.247.124:10150/sensor_data?name=Sensor1&location=floor1" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Parameters
+    + name: `Sensor1` (string) - sensor name
+    + location: `floor1` (string) - sensor location
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes
+        + temperature: 25.6 (number, required) - temperature
+        + humidity: 70 (number, required) - humidity
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+### Upload Sensor Data [POST]
+
+Upload sensor Data.
+
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/sensor_data" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "temperature": 25.6,
+  "humidity": 70,
+  "sensor": "Sensor1"
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Gateway Authentication Bearer Token
+
+    + Attributes
+        + temperature: 25.6 (number, required) - temperature
+        + humidity: 70 (number, required) - humidity
+        + sensor: `Sensor1` (string, required) - sensor name
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - success
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+## Meter Data [/meter_data]
+
+Meter Data
+
+### Upload Meter Data [POST]
+
+Upload Meter Data.
+
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/meter_data" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "voltage": 218.204,
+  "current": 0.139,
+  "power": 8.638,
+  "total_current": 17.368,
+  "sensor": "SmartMeter"
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Gateway Authentication Bearer Token
+
+    + Attributes
+        + voltage: 218.204 (number, required) - voltage
+        + current: 0.139 (number, required) - current
+        + power: 8.638 (number, required) - power
+        + total_current: 17.368 (number, required) - total_current
+        + sensor: `SmartMeter` (string, required) - sensor name
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - success
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+## Gateway [/gateway]
+
+Gateway management
+
+### Create Gateway [POST]
+
+Create Gateway.
+
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/gateway" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "name": "GW",
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Gateway Authentication Bearer Token
+
+    + Attributes
+        + name: `GW` (string, required) - gateway name
+        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` (string) - gateway token
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `success` - success
+        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` - gateway token
+
++ Response 400 (application/json)
+    + Attributes
+        + error: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+## Device [/device]
+
+Device management
+
+### Create Device [POST]
+
+Create AC Device.
+
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/device" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "name": "AC",
+  "url": "localhost:7000",
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
+    + Attributes
+        + name: `AC` (string, required) - device name
+        + url: `localhost:7000` (string, required) - device socket url
+        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` (string) - device token
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - success
+
++ Response 400 (application/json)
+    + Attributes
+        + error: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+## Control Record [/control]
+
+Control Record
+
+### Get Latest Control Record [GET /control{?device}]
+
+Get latest control record.
+
+<pre>
+curl "http://140.116.247.124:10150/control?device=AC1" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Parameters
+    + device: `AC1` (string) - device name
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes
+        + status: `25C` (string, required) - device status
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+### Control Device [POST]
+
+Send Control Command.
+
+<pre>
+curl -X "POST" "http://140.116.247.124:10150/sensor_data" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "device": "AC1",
+  "command": "25C",
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Gateway Authentication Bearer Token
+
+    + Attributes
+        + device: "AC1" (string, required) - device name
+        + command: "25C" (string, required) - command
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - success
+
++ Response 400 (application/json)
+    + Attributes
+        + error: `Device Not Found` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
++ Response 500 (application/json)
+    + Attributes
+        + error: `Control Success, Save Failed` - error message
+
+# Group Service
+
+## Service Health check [/health]
+
+### GET Service Check [GET]
+
+Return basic response, used to check service status
+
+<pre>
+curl "http://140.116.247.124:10150/health"
+</pre>
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - Service responses successfully

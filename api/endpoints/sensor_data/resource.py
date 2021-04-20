@@ -10,8 +10,15 @@ class SensorDataResource(Resource):
     """Save Sensor Data"""
 
     def __init__(self):
+        # Get One Sensor data
+        self._set_get_parser()
         # Upload Data
         self._set_post_parser()
+
+    def _set_get_parser(self):
+        self.get_parser = reqparse.RequestParser()
+        self.get_parser.add_argument("name", type=str, required=False, location="values")
+        # self.get_parser.add_argument("location", type=str, required=False, location="values")
 
     def _set_post_parser(self):
         self.post_parser = reqparse.RequestParser()
@@ -41,8 +48,9 @@ class SensorDataResource(Resource):
     @USER_AUTH.login_required
     def get(self):
         """Get Latest Sensor Data"""
-        logger.info(f"[GET One Sensor Data Request]\n User: {g.account}")
-        data = SensorData.query.filter_by(sensor="DHT22_VLDB").order_by(SensorData.created.desc()).first()
+        args = self.get_parser.parse_args()
+        logger.info(f"[GET One Sensor Data Request]\n User: {g.account}, Sensor: {args['name']}")
+        data = SensorData.query.filter_by(sensor=args['name']).order_by(SensorData.created.desc()).first()
         if data:
             return {"temperature": data.temperature, "humidity": data.humidity}
         return {"message": "Failed"}, 400

@@ -27,7 +27,9 @@ Smart Room Control and Data Collect Service
 
 ## API Document
 
-Document: TBD
+Document: [apiary.apib](./apiary.apib)
+
+Online Document: [smart-room document](https://smartroom1.docs.apiary.io/#)
 
 ## Getting Started
 
