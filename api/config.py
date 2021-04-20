@@ -66,6 +66,3 @@ REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "password")
 REDIS = redis.Redis(
     host=REDIS_URL, port=REDIS_PORT, db=0, health_check_interval=REDIS_CHECK_INTERVAL, password=REDIS_PASSWORD
 )
-
-# FOR PI
-DATA_CENTER_URL = os.environ.get("DATA_CENTER_URL", "10.8.2.101:5000")
