@@ -4,10 +4,10 @@ services:
     image: smart-room:latest
     build: .
     container_name: SMART_ROOM
-    restart: always
-    env_file: ./production_env
     ports:
       - 5000:5000
+    restart: always
+    env_file: ./production_env
 
 volumes:
   grafana-storage:

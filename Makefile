@@ -10,6 +10,13 @@ dev: init
 	pipenv install --dev
 	# pipenv run pre-commit install -t commit-msg
 
+service_up:
+	cd services/ && docker-compose up -d
+
+service_down:
+	cd services/ && docker-compose down
+	docker volume rm postgres_data redis_data grafana_data
+
 commit:
 	pipenv run cz commit
 
