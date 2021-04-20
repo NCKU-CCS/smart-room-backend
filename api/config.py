@@ -54,15 +54,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
-# db = SQLAlchemy()
 # pylint: enable=C0103
 
 TZ = pytz.timezone(os.environ.get("TZ", "Asia/Taipei"))
 
-REDIS_URL = os.environ.get("REDIS_URL", "localhost")
-REDIS_PORT = int(os.environ.get("REDIS_PORT", 6379))
 REDIS_CHECK_INTERVAL = int(os.environ.get("REDIS_CHECK_INTERVAL", 600))
-REDIS_PASSWORD = os.environ.get("REDIS_PASSWORD", "password")
-REDIS = redis.Redis(
-    host=REDIS_URL, port=REDIS_PORT, db=0, health_check_interval=REDIS_CHECK_INTERVAL, password=REDIS_PASSWORD
-)
+REDIS = redis.Redis.from_url(os.environ.get("REDIS_URL", ""), health_check_interval=REDIS_CHECK_INTERVAL)
