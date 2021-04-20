@@ -41,10 +41,30 @@ Online Document: [smart-room document](https://smartroom1.docs.apiary.io/#)
 
 ### Running Development
 
-Installing Packages & Running
-```sh
-make init
-make run
+1. Create environment file
+```sh=
+cp sample.env .env
+```
+
+2. Installing Packages & Entering environment
+```sh=
+make dev
+pipenv shell
+```
+
+3. Starting external components
+```sh=
+make service_up
+```
+
+4. Migrating database
+```sh=
+
+```
+
+5. (Optional) Shut down external services
+```sh=
+make service_down
 ```
 
 ### Running Production

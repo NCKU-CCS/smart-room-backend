@@ -50,7 +50,7 @@ APP_CONFIG = {
 # pylint: disable=C0103
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DB_URL", "postgresql://dev_user:dev191026@localhost:5432/dev_db"
+    "DB_URL", "postgresql://postgres:password@localhost:5432/database"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
@@ -59,4 +59,7 @@ db = SQLAlchemy(app)
 TZ = pytz.timezone(os.environ.get("TZ", "Asia/Taipei"))
 
 REDIS_CHECK_INTERVAL = int(os.environ.get("REDIS_CHECK_INTERVAL", 600))
-REDIS = redis.Redis.from_url(os.environ.get("REDIS_URL", ""), health_check_interval=REDIS_CHECK_INTERVAL)
+REDIS = redis.Redis.from_url(
+    os.environ.get("REDIS_URL", "redis://:password@localhost:6379/0"),
+    health_check_interval=REDIS_CHECK_INTERVAL
+)
