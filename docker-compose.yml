@@ -1,37 +1,5 @@
 version: '3'
 services:
-  postgres:
-    # checking connection: $ docker exec -it  DB_POSTGRE psql -U {POSTGRES_USER} -W {POSTGRES_DB}
-    image: postgres:13.1-alpine
-    container_name: DB_POSTGRE
-    restart: always
-    volumes:
-      - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
-      # mounting create uuid extension statement to initialization folder in container.
-      - ./create_uuid_extension.sql:/docker-entrypoint-initdb.d/create_uuid_extension.sql
-    expose:
-      - 5432
-    ports:
-      - ${POSTGRES_PORT}:5432
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_ACCOUNT}
-      POSTGRES_PASSWORD: ${DB_PASSWD}
-  backend-redis:
-    image: redis:6
-    container_name: REDIS
-    ports:
-      - 6379:6379
-    command: redis-server --requirepass ${REDIS_PASSWORD}
-  grafana:
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./config/:/etc/grafana/
-      - grafana-storage:/var/lib/grafana
-    restart: always
   smart-room:
     image: smart-room:latest
     build: .

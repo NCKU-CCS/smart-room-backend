@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+  postgres:
+    # checking connection: $ docker exec -it  DB_POSTGRES psql -U {POSTGRES_USER} -W {POSTGRES_DB}
+    image: postgres:13.1-alpine
+    container_name: DB_POSTGRES
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/:/docker-entrypoint-initdb.d/
+    expose:
+      - 5432
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_ACCOUNT}
+      POSTGRES_PASSWORD: ${DB_PASSWD}
+  redis:
+    image: redis:6
+    container_name: REDIS
+    ports:
+      - 6379:6379
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    volumes:
+      - ./config/:/etc/grafana/
+      - grafana_data:/var/lib/grafana
+    restart: always
+
+volumes:
+  postgres_data:
+    name: postgres_data
+  redis_data:
+    name: redis_data
+  grafana_data:
+    name: grafana_data
