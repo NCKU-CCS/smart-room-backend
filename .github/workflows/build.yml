@@ -18,4 +18,5 @@ jobs:
     - name: Build and publish container image
       uses: docker/build-push-action@v2
       with:
+        push: true
         tags: ncku-ccs/smart-room-backend:dev
