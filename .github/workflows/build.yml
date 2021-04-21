@@ -19,4 +19,4 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: docker.pkg.github.com/ncku-ccs/smart-room-backend:dev
+        tags: docker.pkg.github.com/ncku-ccs/smart-room-backend/dev
