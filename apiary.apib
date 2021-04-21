@@ -336,7 +336,7 @@ curl -X "POST" "http://140.116.247.124:10150/gateway" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
-  "name": "GW",
+  "name": "GW"
 }'
 
 </pre>
@@ -377,7 +377,7 @@ curl -X "POST" "http://140.116.247.124:10150/device" \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "name": "AC",
-  "url": "localhost:7000",
+  "url": "localhost:7000"
 }'
 
 </pre>
@@ -442,12 +442,12 @@ curl "http://140.116.247.124:10150/control?device=AC1" \
 Send Control Command.
 
 <pre>
-curl -X "POST" "http://140.116.247.124:10150/sensor_data" \
+curl -X "POST" "http://140.116.247.124:10150/control" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "device": "AC1",
-  "command": "25C",
+  "command": "25C"
 }'
 
 </pre>
