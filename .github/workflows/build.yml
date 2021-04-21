@@ -8,8 +8,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build docker image
-      run: |
-        cp env.sample .env
-        cp env.sample production_env
-        docker-compose build
+    - name: Build container image
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        registry: docker.pkg.github.com
+        repository: ${{ github.repository }}:dev
+        tag_with_sha: true
+        tag_with_ref: true
