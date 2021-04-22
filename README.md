@@ -61,7 +61,8 @@ make service_up
 
 4. Migrating database
 ```sh=
-
+python api/manage.py db init
+python api/manage.py db upgrade
 ```
 
 5. (Optional) Shut down external services

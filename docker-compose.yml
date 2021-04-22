@@ -41,6 +41,9 @@ services:
       - 5000:5000
     container_name: SMART_ROOM
     env_file: ./production_env
+    depends_on:
+      - postgres
+      - redis
 
 volumes:
   postgres_data:
