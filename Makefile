@@ -11,10 +11,12 @@ dev: init
 	# pipenv run pre-commit install -t commit-msg
 
 service_up:
-	cd services/ && docker-compose up -d
+	docker-compose run -d grafana && \
+	docker-compose run -d postgres && \
+	docker-compose run -d redis
 
 service_down:
-	cd services/ && docker-compose down
+	docker-compose down && \
 	docker volume rm postgres_data redis_data grafana_data
 
 commit:
