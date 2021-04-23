@@ -477,6 +477,56 @@ curl -X "POST" "http://140.116.247.124:10150/control" \
     + Attributes
         + error: `Control Success, Save Failed` - error message
 
+## Appliances Data [/appliances_data]
+
+Get Appliances Latest State
+
+### Get Sensor Data [GET /appliances_data{?name,room,location}]
+
+Get sensors.
+
+<pre>
+curl "http://140.116.247.124:10150/appliances_data?room=608" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Parameters
+    + name: `Sensor1` (string) - sensor name
+    + room: `602` (string) - sensor room
+    + location: `VLDB` (string) - sensor location
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes (array, fixed-type)
+        + (object)
+            + `device_type`: `thermo_sensor` (string) - device type
+            + name: `Sensor1` (string) - device name
+            + room: `602` (string) - device room
+            + time: `2021-04-23 20:48:05` (string) - data upadte time
+            + data
+                + temperature: 25.6 (number) - temperature
+                + humidity: 70 (number) - humidity
+        + (object)
+            + `device_type`: `ac` (string) - device type
+            + name: `AC1` (string) - device name
+            + room: `602` (string) - device room
+            + time: `2021-04-23 20:48:05` (string) - data upadte time
+            + data
+                + command: `off` (string) - latest command
+                + previous_command: `22C` (string) - previous non off command
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
 # Group Service
 
 ## Service Health check [/health]
