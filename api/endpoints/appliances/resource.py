@@ -43,11 +43,11 @@ class AppliancesResource(Resource):
                     {
                         "device_type": "thermo_sensor",
                         "name": sensor.name,
+                        "room": sensor.room,
                         "time": str(latest_data.created),
                         "data": {"temperature": latest_data.temperature, "humidity": latest_data.humidity},
                     }
                 )
-        logger.debug(appliances_status)
         devices = Device.query.filter(*criteria_device).all()
         for device in devices:
             latest_data = (
@@ -60,6 +60,7 @@ class AppliancesResource(Resource):
                     {
                         "device_type": "ac",
                         "name": device.name,
+                        "room": device.room,
                         "time": str(latest_data.created),
                         "data": {"command": latest_data.command},
                     }
