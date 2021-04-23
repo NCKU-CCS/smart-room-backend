@@ -8,7 +8,10 @@ from config import REDIS
 
 def init_redis():
     """Initialize Redis Data"""
-    update_gateways()
+    try:
+        update_gateways()
+    except Exception:
+        pass
 
 
 def update_gateways():

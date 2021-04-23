@@ -1,45 +1,54 @@
-version: '3'
+version: '3.4'
 services:
   postgres:
-    # checking connection: $ docker exec -it  DB_POSTGRE psql -U {POSTGRES_USER} -W {POSTGRES_DB}
+    # checking connection: $ docker exec -it  DB_POSTGRES psql -U {POSTGRES_USER} -W {POSTGRES_DB}
     image: postgres:13.1-alpine
-    container_name: DB_POSTGRE
+    container_name: DB_POSTGRES
     restart: always
-    volumes:
-      - ${POSTGRES_DATA_DIR}:/var/lib/postgresql/data
-      # mounting create uuid extension statement to initialization folder in container.
-      - ./create_uuid_extension.sql:/docker-entrypoint-initdb.d/create_uuid_extension.sql
-    expose:
-      - 5432
     ports:
-      - ${POSTGRES_PORT}:5432
+      - 5432:5432
+    volumes:
+      - ./services/sql/:/docker-entrypoint-initdb.d/
+      - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_ACCOUNT}
-      POSTGRES_PASSWORD: ${DB_PASSWD}
-  backend-redis:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+  redis:
     image: redis:6
     container_name: REDIS
+    restart: always
     ports:
       - 6379:6379
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
   grafana:
     image: grafana/grafana
     container_name: grafana
+    restart: always
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
-      - ./config/:/etc/grafana/
-      - grafana-storage:/var/lib/grafana
+      - ./services/grafana/:/etc/grafana/
+      - grafana_data:/var/lib/grafana
     restart: always
   smart-room:
     image: smart-room:latest
     build: .
-    container_name: SMART_ROOM
     restart: always
-    env_file: ./production_env
     ports:
       - 5000:5000
+    container_name: SMART_ROOM
+    env_file: ./production_env
+    depends_on:
+      - postgres
+      - redis
 
 volumes:
-  grafana-storage:
+  postgres_data:
+    name: postgres_data
+  redis_data:
+    name: redis_data
+  grafana_data:
+    name: grafana_data
