@@ -5,6 +5,7 @@ from endpoints.sensor.resource import SensorResource
 from endpoints.user.resource import UserResource, LoginResource
 from endpoints.device.resource import DeviceResource
 from endpoints.control.resource import ControlResource
+from endpoints.appliances.resource import AppliancesResource
 from endpoints.health.resource import HealthResource
 
 
@@ -18,4 +19,5 @@ RESOURCES = {
     "control": ControlResource,
     "health": HealthResource,
     "sensor": SensorResource,
+    "appliance": AppliancesResource,
 }
