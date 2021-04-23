@@ -32,47 +32,47 @@ class AppliancesResource(Resource):
             if args[argument]:
                 criteria_sensor.append(getattr(Sensor, argument) == args[argument])
                 criteria_device.append(getattr(Device, argument) == args[argument])
-        sensors = Sensor.query.filter(*criteria_sensor).all()
         appliances_status = []
+        sensors = Sensor.query.filter(*criteria_sensor).all()
         for sensor in sensors:
-            latest_data = (
-                SensorData.query.filter(SensorData.sensor == sensor.name).order_by(SensorData.created.desc()).first()
-            )
-            if latest_data:
-                appliances_status.append(
-                    {
-                        "device_type": "thermo_sensor",
-                        "name": sensor.name,
-                        "room": sensor.room,
-                        "time": str(latest_data.created),
-                        "data": {"temperature": latest_data.temperature, "humidity": latest_data.humidity},
-                    }
-                )
+            appliances_status.append(self.get_latest_sensor_data(sensor.device_type, sensor.name, sensor.room))
         devices = Device.query.filter(*criteria_device).all()
         for device in devices:
-            latest_data = (
-                ControlRecord.query.filter(ControlRecord.device == device.name)
-                .order_by(ControlRecord.created.desc())
-                .first()
-            )
-            if latest_data:
-                appliances_status.append(
-                    {
-                        "device_type": "ac",
-                        "name": device.name,
-                        "room": device.room,
-                        "time": str(latest_data.created),
-                        "data": {"command": latest_data.command},
-                    }
-                )
-                if latest_data.command == "off":
-                    previous_command = (
-                        ControlRecord.query.filter(ControlRecord.device == device.name, ControlRecord.command != "off")
-                        .order_by(ControlRecord.created.desc())
-                        .first()
-                    )
-                    if previous_command:
-                        appliances_status[-1]["data"]["previous_command"] = previous_command.command
+            appliances_status.append(self.get_latest_sensor_data("ac", device.name, device.room))
         return appliances_status
 
     # pylint: enable=R0201
+
+    @staticmethod
+    def get_latest_sensor_data(device_type: str, name: str, location: str) -> dict:
+        if device_type == "thermo_sensor":
+            latest_data: SensorData = (
+                SensorData.query.filter(SensorData.sensor == name).order_by(SensorData.created.desc()).first()
+            )
+            if latest_data:
+                data = {"temperature": latest_data.temperature, "humidity": latest_data.humidity}
+            else:
+                data = {"temperature": None, "humidity": None}
+        elif device_type == "ac":
+            latest_data: ControlRecord = (
+                ControlRecord.query.filter(ControlRecord.device == name).order_by(ControlRecord.created.desc()).first()
+            )
+            previous_nonoff_command = (
+                ControlRecord.query.filter(ControlRecord.device == name, ControlRecord.command != "off")
+                .order_by(ControlRecord.created.desc())
+                .first()
+            )
+            data = {
+                "command": latest_data.command if latest_data else None,
+                "previous_command": previous_nonoff_command.command if previous_nonoff_command else None,
+            }
+        appliances_status: dict = dict()
+        if latest_data:
+            appliances_status = {
+                "device_type": device_type,
+                "name": name,
+                "room": location,
+                "time": str(latest_data.created),
+                "data": data,
+            }
+        return appliances_status
