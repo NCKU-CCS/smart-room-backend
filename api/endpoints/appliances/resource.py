@@ -58,12 +58,23 @@ class AppliancesResource(Resource):
                 ControlRecord.query.filter(ControlRecord.device == name).order_by(ControlRecord.created.desc()).first()
             )
             previous_nonoff_command = (
-                ControlRecord.query.filter(ControlRecord.device == name, ControlRecord.command != "off")
+                ControlRecord.query.filter(ControlRecord.device == name, ControlRecord.command.notin_(["off", "fan"]))
                 .order_by(ControlRecord.created.desc())
                 .first()
             )
+            latest_mode: str = str()
+            if latest_data:
+                if latest_data.command == "off":
+                    latest_mode = "off"
+                elif latest_data.command == "fan":
+                    latest_mode = "fan"
+                else:
+                    latest_mode = "cool"
+            else:
+                latest_mode = "off"
             data = {
-                "command": latest_data.command if latest_data else None,
+                "status": "ON" if latest_mode != "off" else "OFF",
+                "mode": latest_mode,
                 "previous_command": previous_nonoff_command.command if previous_nonoff_command else None,
             }
         appliances_status: dict = dict()

@@ -28,7 +28,7 @@ class ControlResource(Resource):
             "device", type=str, required=True, location="json", help=f"Control: device is required"
         )
         available_commands = [str(temperature) + "C" for temperature in range(16, 31)]
-        available_commands.append("off")
+        available_commands.extend(["off", "fan"])
         self.post_parser.add_argument(
             "command",
             type=str,
