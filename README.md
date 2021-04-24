@@ -70,6 +70,11 @@ python api/manage.py db upgrade
 make service_down
 ```
 
+6. (Optional) Version freeze to generate `requirements.txt`
+```sh=
+pipenv lock --requirements > requirements.txt
+```
+
 ### Running Production
 
 1. build docker image
