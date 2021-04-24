@@ -18,6 +18,7 @@ class SensorResource(Resource):
     def _set_get_parser(self):
         self.get_parser = reqparse.RequestParser()
         self.get_parser.add_argument("name", type=str, required=False, location="values")
+        self.get_parser.add_argument("room", type=str, required=False, location="values")
         self.get_parser.add_argument("location", type=str, required=False, location="values")
         self.get_parser.add_argument("device_type", type=str, required=False, location="values")
 
@@ -25,6 +26,9 @@ class SensorResource(Resource):
         self.post_parser = reqparse.RequestParser()
         self.post_parser.add_argument(
             "name", type=str, required=True, location="json", help="Add Sensor: name is required"
+        )
+        self.post_parser.add_argument(
+            "room", type=str, required=True, location="json", help="Add Sensor: name is required"
         )
         self.post_parser.add_argument(
             "location", type=str, required=True, location="json", help="Add Sensor: location is required"
