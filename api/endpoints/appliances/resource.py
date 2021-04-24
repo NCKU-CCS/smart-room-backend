@@ -75,7 +75,7 @@ class AppliancesResource(Resource):
             data = {
                 "status": "ON" if latest_mode != "off" else "OFF",
                 "mode": latest_mode,
-                "previous_command": previous_nonoff_command.command if previous_nonoff_command else None,
+                "temp": previous_nonoff_command.command if previous_nonoff_command else None,
             }
         appliances_status: dict = dict()
         if latest_data:

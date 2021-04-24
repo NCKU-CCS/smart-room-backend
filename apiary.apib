@@ -516,8 +516,9 @@ curl "http://140.116.247.124:10150/appliance?room=608" \
             + room: `602` (string) - device room
             + time: `2021-04-23 20:48:05` (string) - data upadte time
             + data
-                + command: `off` (string) - latest command
-                + previous_command: `22C` (string) - previous non off command
+                + status: `OFF` (string) - latest status (ON/OFF)
+                + mode: `off` (string) - latest mode (cool/fan/off)
+                + temp: `22C` (string) - previous non off command
 
 + Response 400 (application/json)
     + Attributes
