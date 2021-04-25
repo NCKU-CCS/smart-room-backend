@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "232cfd0aa415c0b0f1ccf705b50f80790e462ce6690bbc77029f979e798ea69f"
+            "sha256": "0b4a67fd080001b9f3ac36a644b594526fde4b9703be750b09491767e4d39d2b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -12,11 +12,6 @@
                 "name": "pypi",
                 "url": "https://pypi.org/simple",
                 "verify_ssl": true
-            },
-            {
-                "name": "tap",
-                "url": "http://pypi.19gale.ai:9999/simple",
-                "verify_ssl": false
             }
         ]
     },
@@ -394,11 +389,11 @@
         },
         "astroid": {
             "hashes": [
-                "sha256:0f156ea0feec7fb78fd035d041a047b37f2aae9345d7f7960670bcd961182f77",
-                "sha256:b8823e7af8044b97b4b0c1bad06b980e4ce5519fee6d3d77ea5333a2b2d61d9a"
+                "sha256:4db03ab5fc3340cf619dbc25e42c2cc3755154ce6009469766d7143d1fc2ee4e",
+                "sha256:8a398dfce302c13f14bab13e2b14fe385d32b73f4e4853b9bdfb64598baa1975"
             ],
             "markers": "python_version ~= '3.6'",
-            "version": "==2.5.5"
+            "version": "==2.5.6"
         },
         "attrs": {
             "hashes": [

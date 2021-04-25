@@ -3,11 +3,6 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[[source]]
-name = "tap"
-url = "http://pypi.19gale.ai:9999/simple"
-verify_ssl = false
-
 [dev-packages]
 pytest = "==6.1.2"
 pytest-cov = "==2.10.1"
@@ -21,7 +16,7 @@ pre-commit = "==2.5.1"
 commitizen = "==1.23.0"
 mypy = "==0.790"
 isort = "==4.3.21"
-pylint-flask-sqlalchemy = "*"
+pylint-flask-sqlalchemy = "==0.2.0"
 
 [packages]
 requests = "==2.22.0"
