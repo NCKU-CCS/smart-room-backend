@@ -34,7 +34,7 @@ services:
       - grafana_data:/var/lib/grafana
     restart: always
   smart-room:
-    image: smart-room:latest
+    image: docker.pkg.github.com/ncku-ccs/smart-room-backend/dev:latest
     build: .
     restart: always
     ports:

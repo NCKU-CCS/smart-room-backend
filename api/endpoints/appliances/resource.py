@@ -46,33 +46,47 @@ class AppliancesResource(Resource):
     @staticmethod
     def get_latest_sensor_data(device_type: str, name: str, location: str) -> dict:
         if device_type == "thermo_sensor":
-            latest_data: SensorData = (
+            latest_command: SensorData = (
                 SensorData.query.filter(SensorData.sensor == name).order_by(SensorData.created.desc()).first()
             )
-            if latest_data:
-                data = {"temperature": latest_data.temperature, "humidity": latest_data.humidity}
+            if latest_command:
+                data = {"temperature": latest_command.temperature, "humidity": latest_command.humidity}
             else:
                 data = {"temperature": None, "humidity": None}
         elif device_type == "ac":
-            latest_data: ControlRecord = (
+            latest_command: ControlRecord = (
                 ControlRecord.query.filter(ControlRecord.device == name).order_by(ControlRecord.created.desc()).first()
             )
-            previous_nonoff_command = (
-                ControlRecord.query.filter(ControlRecord.device == name, ControlRecord.command != "off")
+            latest_control_command = (
+                ControlRecord.query.filter(ControlRecord.device == name, ControlRecord.command.notin_(["off", "fan"]))
                 .order_by(ControlRecord.created.desc())
                 .first()
             )
+            latest_mode: str = mode_judgment(latest_command)
             data = {
-                "command": latest_data.command if latest_data else None,
-                "previous_command": previous_nonoff_command.command if previous_nonoff_command else None,
+                "status": "ON" if latest_mode != "off" else "OFF",
+                "mode": latest_mode,
+                "temp": latest_control_command.command if latest_control_command else None,
             }
         appliances_status: dict = dict()
-        if latest_data:
+        if latest_command:
             appliances_status = {
                 "device_type": device_type,
                 "name": name,
                 "room": location,
-                "time": str(latest_data.created),
+                "time": str(latest_command.created),
                 "data": data,
             }
         return appliances_status
+
+
+def mode_judgment(latest_command):
+    mode: str = "off"
+    if latest_command:
+        if latest_command.command == "off":
+            mode = "off"
+        elif latest_command.command == "fan":
+            mode = "fan"
+        else:
+            mode = "cool"
+    return mode

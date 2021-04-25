@@ -477,16 +477,16 @@ curl -X "POST" "http://140.116.247.124:10150/control" \
     + Attributes
         + error: `Control Success, Save Failed` - error message
 
-## Appliances Data [/appliances_data]
+## Appliances Data [/appliance]
 
 Get Appliances Latest State
 
-### Get Sensor Data [GET /appliances_data{?name,room,location}]
+### Get Appliances Data [GET /appliance{?name,room,location}]
 
-Get sensors.
+Get appliances latest status.
 
 <pre>
-curl "http://140.116.247.124:10150/appliances_data?room=608" \
+curl "http://140.116.247.124:10150/appliance?room=608" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
 </pre>
 
@@ -516,8 +516,9 @@ curl "http://140.116.247.124:10150/appliances_data?room=608" \
             + room: `602` (string) - device room
             + time: `2021-04-23 20:48:05` (string) - data upadte time
             + data
-                + command: `off` (string) - latest command
-                + previous_command: `22C` (string) - previous non off command
+                + status: `OFF` (string) - latest status (ON/OFF)
+                + mode: `off` (string) - latest mode (cool/fan/off)
+                + temp: `22C` (string) - previous non off command
 
 + Response 400 (application/json)
     + Attributes

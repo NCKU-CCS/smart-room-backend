@@ -18,7 +18,7 @@ class DeviceResource(Resource):
 
     def _set_post_parser(self):
         self.post_parser = reqparse.RequestParser()
-        device_arguments = ["name", "url", "location"]
+        device_arguments = ["name", "url", "location", "room"]
         for arg in device_arguments:
             self.post_parser.add_argument(
                 arg, type=str, required=True, location="json", help=f"Create Device: {arg} is required"
@@ -34,6 +34,7 @@ class DeviceResource(Resource):
         device = {
             "name": args["name"],
             "url": args["url"],
+            "room": args["room"],
             "location": args["location"],
             "token": args["token"] if args["token"] else secrets.token_hex(),
         }
