@@ -10,7 +10,7 @@ from ..sensor.model import Sensor
 
 
 class MeterDataResource(Resource):
-    """Get and Uploa Meter Data"""
+    """Get and Upload Meter Data"""
 
     def __init__(self):
         # Upload Data

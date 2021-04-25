@@ -63,4 +63,5 @@ REDIS = redis.Redis.from_url(
     os.environ.get("REDIS_URL", "redis://:password@localhost:6379/0"), health_check_interval=REDIS_CHECK_INTERVAL
 )
 
-VOLTAGE = 220
+# AIR_CONDITIONER_VOLTAGE
+VOLTAGE = int(os.environ.get("AIR_CONDITIONER_VOLTAGE", 220))
