@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from loguru import logger
 
+from config import SESSION
 from utils.oauth import USER_AUTH, g
 from ..sensor.model import Sensor
 from ..sensor_data.model import SensorData
@@ -33,10 +34,10 @@ class AppliancesResource(Resource):
                 criteria_sensor.append(getattr(Sensor, argument) == args[argument])
                 criteria_device.append(getattr(Device, argument) == args[argument])
         appliances_status = []
-        sensors = Sensor.query.filter(*criteria_sensor).all()
+        sensors = SESSION.query(Sensor).filter(*criteria_sensor).all()
         for sensor in sensors:
             appliances_status.append(self.get_latest_sensor_data(sensor.device_type, sensor.name, sensor.room))
-        devices = Device.query.filter(*criteria_device).all()
+        devices = SESSION.query(Device).filter(*criteria_device).all()
         for device in devices:
             appliances_status.append(self.get_latest_sensor_data("ac", device.name, device.room))
         return appliances_status
@@ -47,7 +48,7 @@ class AppliancesResource(Resource):
     def get_latest_sensor_data(device_type: str, name: str, location: str) -> dict:
         if device_type == "thermo_sensor":
             latest_command: SensorData = (
-                SensorData.query.filter(SensorData.sensor == name).order_by(SensorData.created.desc()).first()
+                SESSION.query(SensorData).filter(SensorData.sensor == name).order_by(SensorData.created.desc()).first()
             )
             if latest_command:
                 data = {"temperature": latest_command.temperature, "humidity": latest_command.humidity}
@@ -55,10 +56,16 @@ class AppliancesResource(Resource):
                 data = {"temperature": None, "humidity": None}
         elif device_type == "ac":
             latest_command: ControlRecord = (
-                ControlRecord.query.filter(ControlRecord.device == name).order_by(ControlRecord.created.desc()).first()
+                SESSION.query(ControlRecord).filter(
+                    ControlRecord.device == name
+                ).order_by(
+                    ControlRecord.created.desc()
+                ).first()
             )
             latest_control_command = (
-                ControlRecord.query.filter(ControlRecord.device == name, ControlRecord.command.notin_(["off", "fan"]))
+                SESSION.query(ControlRecord).filter(
+                    ControlRecord.device == name, ControlRecord.command.notin_(["off", "fan"])
+                )
                 .order_by(ControlRecord.created.desc())
                 .first()
             )

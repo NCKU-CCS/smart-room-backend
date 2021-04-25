@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse
 from loguru import logger
 
 from utils.oauth import USER_AUTH, GW_AUTH, g
-from config import db, VOLTAGE
+from config import SESSION, VOLTAGE
 from .model import MeterData
 from ..sensor.model import Sensor
 
@@ -54,13 +54,13 @@ class MeterDataOverview(Resource):
     @staticmethod
     def get_overview():
         """Get latest power consumption data"""
-        ct_sensors = Sensor.query.filter(Sensor.device_type == "CT").all()
+        ct_sensors = SESSION.query(Sensor).filter(Sensor.device_type == "CT").all()
         ct_sensor_name = [sensor.name for sensor in ct_sensors]
         ct_room: dict = {sensor.name: sensor.room for sensor in ct_sensors}
         power = (MeterData.current * VOLTAGE).label("power")
         criteria = [MeterData.sensor.in_(ct_sensor_name), MeterData.created >= datetime.utcnow() - timedelta(minutes=5)]
         ct_data = (
-            db.session.query(MeterData.sensor, power)
+            SESSION.query(MeterData.sensor, power)
             .filter(*criteria)
             .order_by(MeterData.sensor, MeterData.created.desc())
             .distinct(MeterData.sensor)

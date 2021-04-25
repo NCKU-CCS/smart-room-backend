@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse
 from werkzeug.security import generate_password_hash, check_password_hash
 from loguru import logger
 
-
+from config import SESSION
 from utils.oauth import USER_AUTH, g
 from .model import User
 
@@ -44,7 +44,7 @@ class UserResource(Resource):
     def get(self):
         """Get User Information: UUID and Name"""
         logger.info(f"[Get User Request]\nUser Account:{g.account}")
-        user = User.query.filter_by(uuid=g.uuid).first()
+        user = SESSION.query(User).filter_by(uuid=g.uuid).first()
         response = {"uuid": user.uuid, "account": user.account}
         return response
 
@@ -55,7 +55,7 @@ class UserResource(Resource):
     def put(self):
         """Change User Password"""
         logger.info(f"[Put User Request]\nUser Account:{g.account}")
-        user = User.query.filter_by(uuid=g.uuid).first()
+        user = SESSION.query(User).filter_by(uuid=g.uuid).first()
         args = self.put_parser.parse_args()
         if check_password_hash(user.password, args["original_password"]):
             user.password = generate_password_hash(args["new_password"])
@@ -71,7 +71,7 @@ class UserResource(Resource):
     def post(self):
         """Add User Account"""
         args = self.post_parser.parse_args()
-        user = User.query.filter_by(account=args["account"]).one_or_none()
+        user = SESSION.query(User).filter_by(account=args["account"]).one_or_none()
         if user:
             return {"error": "Account already exists"}, 409
         user = {
@@ -106,7 +106,7 @@ class LoginResource(Resource):
     def post(self):
         """Login"""
         args = self.post_parser.parse_args()
-        user = User.query.filter_by(account=args["account"]).one_or_none()
+        user = SESSION.query(User).filter_by(account=args["account"]).one_or_none()
         if user:
             if check_password_hash(user.password, args["password"]):
                 g.account = user.account

@@ -4,6 +4,7 @@ import json
 from flask_restful import Resource, reqparse
 from loguru import logger
 
+from config import SESSION
 from utils.oauth import USER_AUTH, g
 from .model import ControlRecord
 from ..device.model import Device
@@ -44,7 +45,7 @@ class ControlResource(Resource):
         """Control Device and Save Record"""
         args = self.post_parser.parse_args()
         logger.info(f"[Control Device] Device: {args['device']}, Command: {args['command']}, Trigger: {g.account}")
-        device = Device.query.filter_by(name=args["device"]).first()
+        device = SESSION.query(Device).filter_by(name=args["device"]).first()
         if not device:
             return {"message": "Device Not Found"}, 400
         response = control_device(device, args["command"])
@@ -64,7 +65,11 @@ class ControlResource(Resource):
         logger.info(f"[GET Device Status Request]\n User: {g.account}")
         args = self.get_parser.parse_args()
         # TODO: Add location
-        data = ControlRecord.query.filter_by(device=args["device"]).order_by(ControlRecord.created.desc()).first()
+        data = SESSION.query(ControlRecord).filter_by(
+            device=args["device"]
+        ).order_by(
+            ControlRecord.created.desc()
+        ).first()
         if data:
             return {"status": data.command}
         return {"message": "Failed"}, 400
