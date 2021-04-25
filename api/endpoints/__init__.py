@@ -1,5 +1,5 @@
 from endpoints.gateway.resource import GatewayResource
-from endpoints.meter_data.resource import MeterDataResource
+from endpoints.meter_data.resource import MeterDataResource, MeterDataOverview
 from endpoints.sensor_data.resource import SensorDataResource
 from endpoints.sensor.resource import SensorResource
 from endpoints.user.resource import UserResource, LoginResource
@@ -12,6 +12,7 @@ from endpoints.health.resource import HealthResource
 RESOURCES = {
     "gateway": GatewayResource,
     "meter_data": MeterDataResource,
+    "meter_data/overview": MeterDataOverview,
     "sensor_data": SensorDataResource,
     "user": UserResource,
     "login": LoginResource,

@@ -285,6 +285,35 @@ curl -X "POST" "http://140.116.247.124:10150/sensor_data" \
 
 Meter Data
 
+### Get Meter Data Overview [GET /meter_data/overview]
+
+Get meter data overview.
+
+<pre>
+curl "http://140.116.247.124:10150/meter_data/overview" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes
+        + total: 100.0 (number, required) - total power consumption
+        + data
+            + 602: 60.0 (number, required) - 602 power consumption
+            + 608: 40.0 (number, required) - 608 power consumption
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
 ### Upload Meter Data [POST]
 
 Upload Meter Data.
