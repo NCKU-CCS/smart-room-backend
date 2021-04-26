@@ -9,7 +9,7 @@ from sqlalchemy.sql.functions import concat
 from sqlalchemy.dialects.postgresql import INTERVAL
 
 from utils.oauth import USER_AUTH, GW_AUTH, g
-from config import db, VOLTAGE, TZ_OFFSET
+from config import db, VOLTAGE, TZ_OFFSET, THERMO_OUTDOOR
 from .model import MeterData
 from ..sensor.model import Sensor
 from ..sensor_data.model import SensorData
@@ -63,6 +63,7 @@ class MeterDataResource(Resource):
             else:
                 room_sensor[sensor.room][sensor.device_type] = [sensor.name]
             room_sensor["overview"][sensor.device_type].append(sensor.name)
+        room_sensor["overview"]["thermo_sensor"] = THERMO_OUTDOOR
         # Create Data
         data: dict = dict()
         for room in room_sensor:

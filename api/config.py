@@ -66,3 +66,6 @@ REDIS = redis.Redis.from_url(
 
 # AIR_CONDITIONER_VOLTAGE
 VOLTAGE = int(os.environ.get("AIR_CONDITIONER_VOLTAGE", 220))
+
+# Outdoor thermo sensor
+THERMO_OUTDOOR = os.environ.get("THERMO_OUTDOOR", "DHT11_OUTDOOR").split(",")
