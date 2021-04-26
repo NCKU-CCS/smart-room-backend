@@ -54,26 +54,20 @@ class MeterDataResource(Resource):
             .filter(Sensor.device_type.in_(["CT", "thermo_sensor"]))
             .all()
         )
-        rooms: Set[str] = {sensor.room for sensor in sensors}
-        response = {}
+        rooms: Set[str] = {sensor.room for sensor in sensors} | {"overview"}
         try:
-            for room in rooms:
-                sensor_info: Dict[str, list] = {"thermo_sensor": [], "CT": []}
-                for sensor in sensors:
-                    if sensor.room == room and sensor.device_type in sensor_info:
-                        sensor_info[sensor.device_type].append(sensor.name)
-                response[room] = self.get_room_data(sensor_info)
-            # Overview: Outdoor Temperature and Total Power Capacity
-            response["overview"] = self.get_room_data(
-                {
-                    "thermo_sensor": [OUTDOOR_THERMO_SENSORS],
-                    "CT": [sensor.name for sensor in sensors if sensor.device_type == "CT"],
-                }
-            )
+            sensor_info = {room: {"thermo_sensor": [], "CT": []} for room in rooms}
+            sensor_info["overview"] = {
+                "thermo_sensor": [OUTDOOR_THERMO_SENSORS],
+                "CT": [sensor.name for sensor in sensors if sensor.device_type == "CT"],
+            }
+            for sensor in sensors:
+                if sensor.room in sensor_info and sensor.device_type in sensor_info[sensor.room]:
+                    sensor_info[sensor.room][sensor.device_type].append(sensor.name)
+            return {room: self.get_room_data(sensor_info[room]) for room in rooms}
         except Exception as err:
             logger.error(err)
             return {"message": "error"}, 400
-        return response
 
     # pylint: enable=R0201
 
@@ -154,10 +148,14 @@ class MeterDataResource(Resource):
         ]
         # Thermo Sensor Data
         sensor_thermo = (
-            db.session.query(func.avg(SensorData.temperature).label("temperature"), date)
+            # fmt: off
+            db.session.query(func.round(
+                cast(func.avg(SensorData.temperature), DECIMAL), 2
+            ).label("temperature"), date)
             .filter(*criteria)
             .group_by(date)
             .all()
+            # fmt: on
         )
         thermo_data = {thermo.datetime.isoformat(): float(thermo.temperature) for thermo in sensor_thermo}
         return thermo_data
