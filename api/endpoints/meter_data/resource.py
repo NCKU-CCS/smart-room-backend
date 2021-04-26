@@ -9,7 +9,7 @@ from sqlalchemy.sql.functions import concat
 from sqlalchemy.dialects.postgresql import INTERVAL
 
 from utils.oauth import USER_AUTH, GW_AUTH, g
-from config import db, VOLTAGE
+from config import db, VOLTAGE, TZ_OFFSET
 from .model import MeterData
 from ..sensor.model import Sensor
 from ..sensor_data.model import SensorData
@@ -127,8 +127,8 @@ class MeterDataResource(Resource):
 
     @staticmethod
     def simplify_date(column: db.column, time_format: str):
-        date_tz = cast(column + func.cast(concat(8, ' HOURS'), INTERVAL), TIMESTAMP)
-        date = cast(func.to_char(date_tz, time_format), TIMESTAMP).label('datetime')
+        date_tz = cast(column + func.cast(concat(TZ_OFFSET, " HOURS"), INTERVAL), TIMESTAMP)
+        date = cast(func.to_char(date_tz, time_format), TIMESTAMP).label("datetime")
         return date
 
     # pylint: disable=R0201
