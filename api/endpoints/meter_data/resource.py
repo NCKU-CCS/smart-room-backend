@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
+from typing import Set, Dict
 
 from flask_restful import Resource, reqparse
 from loguru import logger
 
-# from sqlalchemy import cast, TIMESTAMP, func, INTEGER, case, DECIMAL
 from sqlalchemy import TIMESTAMP, func, cast, DECIMAL
 from sqlalchemy.sql.functions import concat
 from sqlalchemy.dialects.postgresql import INTERVAL
 
 from utils.oauth import USER_AUTH, GW_AUTH, g
-from config import db, VOLTAGE, TZ_OFFSET, THERMO_OUTDOOR
+from config import db, VOLTAGE, TZ_OFFSET, OUTDOOR_THERMO_SENSORS
 from .model import MeterData
 from ..sensor.model import Sensor
 from ..sensor_data.model import SensorData
@@ -54,42 +54,63 @@ class MeterDataResource(Resource):
             .filter(Sensor.device_type.in_(["CT", "thermo_sensor"]))
             .all()
         )
-        room_sensor: dict = {"overview": {"thermo_sensor": list(), "CT": list()}}
-        for sensor in sensors:
-            if sensor.room not in room_sensor:
-                room_sensor[sensor.room] = {"thermo_sensor": list(), "CT": list()}
-            if sensor.device_type in room_sensor[sensor.room]:
-                room_sensor[sensor.room][sensor.device_type].append(sensor.name)
-            else:
-                room_sensor[sensor.room][sensor.device_type] = [sensor.name]
-            room_sensor["overview"][sensor.device_type].append(sensor.name)
-        room_sensor["overview"]["thermo_sensor"] = THERMO_OUTDOOR
-        # Create Data
-        data: dict = dict()
-        for room in room_sensor:
-            logger.info(f"[Get Data] {room}")
-            data[room] = self.get_room_data(room_sensor[room])
-        return data
+        rooms: Set[str] = {sensor.room for sensor in sensors}
+        response = {}
+        try:
+            for room in rooms:
+                sensor_info: Dict[str, list] = {"thermo_sensor": [], "CT": []}
+                for sensor in sensors:
+                    if sensor.room == room and sensor.device_type in sensor_info:
+                        sensor_info[sensor.device_type].append(sensor.name)
+                response[room] = self.get_room_data(sensor_info)
+            # Overview: Outdoor Temperature and Total Power Capacity
+            response["overview"] = self.get_room_data(
+                {
+                    "thermo_sensor": [OUTDOOR_THERMO_SENSORS],
+                    "CT": [sensor.name for sensor in sensors if sensor.device_type == "CT"],
+                }
+            )
+        except Exception as err:
+            logger.error(err)
+            return {"message": "error"}, 400
+        return response
 
     # pylint: enable=R0201
 
-    def get_room_data(self, room_sensor: dict):
-        if self.args["interval"] == "hour":
-            power = func.round(cast(func.avg(MeterData.current) * VOLTAGE, DECIMAL), 2).label("power")
-            time_format = "YYYY-MM-DD HH24:00:00"
-        else:
-            power = func.round(cast(func.avg(MeterData.current) * VOLTAGE * 24, DECIMAL), 2).label("power")
-            time_format = "YYYY-MM-DD"
+    def get_room_data(self, room_sensor: Dict[str, list]) -> Dict[str, dict]:
+        """Get Data of One Room
+
+        Args:
+            room_sensor (Dict[str, list]): include list of `CT` and `thermo_sensor`
+
+        Returns:
+            Dict[str, dict]: include `power` and `temp`, Dict[datetime.isoformat, float] in fields
+        """
         # Get Meter Data
         combined_data = {
-            "power": self.get_meter_data(self.simplify_date(MeterData.created, time_format), power, room_sensor["CT"]),
-            "temp": self.get_temp_data(
-                self.simplify_date(SensorData.created, time_format), room_sensor["thermo_sensor"]
-            ),
+            "power": self.get_meter_data(room_sensor["CT"]),
+            "temp": self.get_temp_data(room_sensor["thermo_sensor"]),
         }
         return combined_data
 
-    def get_meter_data(self, date, power, ct_sensors: list):
+    def get_meter_data(self, ct_sensors: list) -> Dict[datetime.isoformat, float]:
+        """Get Meter Data with Specific CT Sensors
+
+        Args:
+            ct_sensors (list): CT sensors
+
+        Returns:
+            Dict[datetime.isoformat, float]: historical power consumption data
+        """
+        if self.args["interval"] == "hour":
+            power = func.round(cast(func.avg(MeterData.current) * VOLTAGE, DECIMAL), 2).label("power")
+            time_format = "YYYY-MM-DD HH24:00:00"
+        elif self.args["interval"] == "day":
+            power = func.round(cast(func.avg(MeterData.current) * VOLTAGE * 24, DECIMAL), 2).label("power")
+            time_format = "YYYY-MM-DD 00:00:00"
+        else:
+            raise Exception(f"Invalid interval: {self.args['interval']}")
+        date = self.simplify_date(MeterData.created, time_format)
         criteria = [
             MeterData.created.between(self.args["start_time"], self.args["end_time"]),
             MeterData.sensor.in_(ct_sensors),
@@ -111,7 +132,22 @@ class MeterDataResource(Resource):
         meter_data = {meter.datetime.isoformat(): float(meter.power) for meter in meter_sum}
         return meter_data
 
-    def get_temp_data(self, date, temp_sensors: list):
+    def get_temp_data(self, temp_sensors: list) -> Dict[datetime.isoformat, float]:
+        """Get Temperature Data with Specific Thermo Sensors
+
+        Args:
+            temp_sensors (list): Thermo Sensors
+
+        Returns:
+            Dict[datetime.isoformat, float]: historical temperature data
+        """
+        if self.args["interval"] == "hour":
+            time_format = "YYYY-MM-DD HH24:00:00"
+        elif self.args["interval"] == "day":
+            time_format = "YYYY-MM-DD 00:00:00"
+        else:
+            raise Exception(f"Invalid interval: {self.args['interval']}")
+        date = self.simplify_date(SensorData.created, time_format)
         criteria = [
             SensorData.created.between(self.args["start_time"], self.args["end_time"]),
             SensorData.sensor.in_(temp_sensors),
