@@ -50,7 +50,7 @@ class SensorDataResource(Resource):
         """Get Latest Sensor Data"""
         args = self.get_parser.parse_args()
         logger.info(f"[GET One Sensor Data Request]\n User: {g.account}, Sensor: {args['name']}")
-        data = SensorData.query.filter_by(sensor=args['name']).order_by(SensorData.created.desc()).first()
+        data = SensorData.query.filter_by(sensor=args["name"]).order_by(SensorData.created.desc()).first()
         if data:
             return {"temperature": data.temperature, "humidity": data.humidity}
         return {"message": "Failed"}, 400
