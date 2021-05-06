@@ -54,13 +54,14 @@ APP_CONFIG = {
 # pylint: disable=C0103
 app = Flask(__name__)
 # pylint: enable=C0103
-ENGINE: Engine = create_engine(os.environ.get(
-    "DB_URL", "postgresql://postgres:password@localhost:5432/database"
-), pool_pre_ping=True)
+ENGINE: Engine = create_engine(
+    os.environ.get("DB_URL", "postgresql://postgres:password@localhost:5432/database"), pool_pre_ping=True
+)
 SESSION: Session = sessionmaker(bind=ENGINE)()
 BASE = declarative_base()
 
 TZ = pytz.timezone(os.environ.get("TZ", "Asia/Taipei"))
+TZ_OFFSET = int(os.environ.get("TZ_OFFSET", 8))
 
 REDIS_CHECK_INTERVAL = int(os.environ.get("REDIS_CHECK_INTERVAL", 600))
 REDIS = redis.Redis.from_url(
@@ -69,3 +70,6 @@ REDIS = redis.Redis.from_url(
 
 # AIR_CONDITIONER_VOLTAGE
 VOLTAGE = int(os.environ.get("AIR_CONDITIONER_VOLTAGE", 220))
+
+# Outdoor thermo sensor
+OUTDOOR_THERMO_SENSORS = os.environ.get("OUTDOOR_THERMO_SENSORS", "DHT11_OUTDOOR").split(",")

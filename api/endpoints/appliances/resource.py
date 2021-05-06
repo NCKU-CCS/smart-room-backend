@@ -56,16 +56,14 @@ class AppliancesResource(Resource):
                 data = {"temperature": None, "humidity": None}
         elif device_type == "ac":
             latest_command: ControlRecord = (
-                SESSION.query(ControlRecord).filter(
-                    ControlRecord.device == name
-                ).order_by(
-                    ControlRecord.created.desc()
-                ).first()
+                SESSION.query(ControlRecord)
+                .filter(ControlRecord.device == name)
+                .order_by(ControlRecord.created.desc())
+                .first()
             )
             latest_control_command = (
-                SESSION.query(ControlRecord).filter(
-                    ControlRecord.device == name, ControlRecord.command.notin_(["off", "fan"])
-                )
+                SESSION.query(ControlRecord)
+                .filter(ControlRecord.device == name, ControlRecord.command.notin_(["off", "fan"]))
                 .order_by(ControlRecord.created.desc())
                 .first()
             )

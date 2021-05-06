@@ -65,11 +65,9 @@ class ControlResource(Resource):
         logger.info(f"[GET Device Status Request]\n User: {g.account}")
         args = self.get_parser.parse_args()
         # TODO: Add location
-        data = SESSION.query(ControlRecord).filter_by(
-            device=args["device"]
-        ).order_by(
-            ControlRecord.created.desc()
-        ).first()
+        data = (
+            SESSION.query(ControlRecord).filter_by(device=args["device"]).order_by(ControlRecord.created.desc()).first()
+        )
         if data:
             return {"status": data.command}
         return {"message": "Failed"}, 400

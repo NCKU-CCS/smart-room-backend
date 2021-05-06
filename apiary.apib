@@ -314,6 +314,69 @@ curl "http://140.116.247.124:10150/meter_data/overview" \
     + Attributes
         + error: `Access Denied` - error message
 
+### Get Meter Data [GET /meter_data{?start_time,end_time,interval}]
+
+Get meter data overview.
+
+<pre>
+curl "http://140.116.247.124:10150/meter_data?" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Parameters
+    + `start_time`: `2021-01-01T00:00:00` (string) - start time
+    + `end_time`: `2021-01-02T00:00:00` (string) - end time
+    + `interval`: `day` (string) - interval (hour, day)
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes
+        + overview - outdoor temperature and total power consumption
+            + temp - time, temp pair
+                + `2021-01-01T00:00:00`: 25.5
+                + `2021-01-01T00:01:00`: 25.6
+                + `2021-01-01T00:02:00`: 26.1
+                + `2021-01-01T00:03:00`: 26.6
+            + power - time, power consumption pair
+                + `2021-01-01T00:00:00`: 200.1
+                + `2021-01-01T00:01:00`: 300.2
+                + `2021-01-01T00:02:00`: 1000.0
+                + `2021-01-01T00:03:00`: 1050.6
+        + `602` - 608 temperature & power consumption
+            + temp - time, temp pair
+                + `2021-01-01T00:00:00`: 25.5
+                + `2021-01-01T00:01:00`: 25.6
+                + `2021-01-01T00:02:00`: 26.1
+                + `2021-01-01T00:03:00`: 26.6
+            + power - time, power consumption pair
+                + `2021-01-01T00:00:00`: 200.1
+                + `2021-01-01T00:01:00`: 300.2
+                + `2021-01-01T00:02:00`: 1000.0
+                + `2021-01-01T00:03:00`: 1050.6
+        + `608` - 602 temperature & power consumption
+            + temp - time, temp pair
+                + `2021-01-01T00:00:00`: 25.5
+                + `2021-01-01T00:01:00`: 25.6
+                + `2021-01-01T00:02:00`: 26.1
+                + `2021-01-01T00:03:00`: 26.6
+            + power - time, power consumption pair
+                + `2021-01-01T00:00:00`: 200.1
+                + `2021-01-01T00:01:00`: 300.2
+                + `2021-01-01T00:02:00`: 1000.0
+                + `2021-01-01T00:03:00`: 1050.6
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
 ### Upload Meter Data [POST]
 
 Upload Meter Data.
