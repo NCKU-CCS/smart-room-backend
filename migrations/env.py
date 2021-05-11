@@ -28,7 +28,7 @@ logger = logging.getLogger('alembic.env')
 # Add model related path for alembic to recognize where to find models
 sys.path.append('./')
 from models.utilities import BASE
-# from models import *
+from models import *
 
 target_metadata = BASE.metadata
 
