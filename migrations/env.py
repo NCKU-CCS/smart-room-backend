@@ -1,6 +1,8 @@
 from __future__ import with_statement
 
 import os
+import sys
+
 import logging
 from logging.config import fileConfig
 
@@ -24,7 +26,6 @@ logger = logging.getLogger('alembic.env')
 # target_metadata = mymodel.Base.metadata
 
 # Add model related path for alembic to recognize where to find models
-import sys
 sys.path.append('./')
 from models.utilities import BASE
 # from models import *

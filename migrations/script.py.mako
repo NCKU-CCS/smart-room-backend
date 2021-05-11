@@ -9,11 +9,7 @@ from alembic import op
 import sqlalchemy as sa
 ${imports if imports else ""}
 
-# required if base_model or ModelMixin is used,
-# so that utils.base_model's class can be referenced.
-import sys
-sys.path.insert(0, "./smart_room")
-import utils
+from models.utilities import UUID2STR, UTCDatetime
 
 # revision identifiers, used by Alembic.
 revision = ${repr(up_revision)}
