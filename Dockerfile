@@ -13,6 +13,7 @@ RUN pipenv install --deploy --system
 RUN pip install gunicorn==19.9.0
 
 COPY ./api /api
+COPY ./migrations /migrations
 WORKDIR /api
 
 RUN useradd -ms /bin/bash api
