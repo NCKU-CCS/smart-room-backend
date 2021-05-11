@@ -38,7 +38,7 @@ class SensorDataResource(Resource):
         logger.info(f"[Upload Sensor Data Request]\n GW: {g.gateway_name}")
         data = self.post_parser.parse_args()
         data["gateway"] = g.gateway_name
-        if SensorData(**data).add():
+        if SensorData(**data).add(SESSION):
             return {"message": "Success"}
         return {"message": "Failed"}, 400
 

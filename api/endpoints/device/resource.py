@@ -3,6 +3,7 @@ import secrets
 from flask_restful import Resource, reqparse
 from loguru import logger
 
+from config import SESSION
 from utils.oauth import USER_AUTH, g
 from migrations.models import Device
 
@@ -38,7 +39,7 @@ class DeviceResource(Resource):
             "location": args["location"],
             "token": args["token"] if args["token"] else secrets.token_hex(),
         }
-        if Device(**device).add():
+        if Device(**device).add(SESSION):
             return {"message": "Success"}
         return {"message": "Failed"}, 400
 

@@ -4,8 +4,9 @@ from flask_restful import Resource, reqparse
 from loguru import logger
 
 from utils.start_up import update_gateways
-
 from utils.oauth import USER_AUTH, g
+
+from config import SESSION
 from migrations.models import Gateway
 
 
@@ -32,7 +33,7 @@ class GatewayResource(Resource):
         args = self.post_parser.parse_args()
         logger.info(f"[ADD Gateway] User: {g.account}, GW: {args['name']}")
         token = args["token"] if args["token"] else secrets.token_hex()
-        if Gateway(**{"name": args["name"], "token": token}).add():
+        if Gateway(**{"name": args["name"], "token": token}).add(SESSION):
             # Update Cache
             update_gateways()
             return {"message": "success", "token": token}

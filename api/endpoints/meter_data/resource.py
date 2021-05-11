@@ -168,7 +168,7 @@ class MeterDataResource(Resource):
         logger.info(f"[Upload Data Request]\n GW: {g.gateway_name}")
         data = self.post_parser.parse_args()
         data["gateway"] = g.gateway_name
-        if MeterData(**data).add():
+        if MeterData(**data).add(SESSION):
             return {"message": "Success"}
         return {"message": "Failed"}, 400
 

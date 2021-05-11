@@ -50,7 +50,7 @@ class ControlResource(Resource):
         response = control_device(device, args["command"])
         if response:
             record = {"device": args["device"], "command": args["command"], "trigger": g.account}
-            if ControlRecord(**record).add():
+            if ControlRecord(**record).add(SESSION):
                 return {"message": "Control Success"}
             return {"message": "Control Success, Save Failed"}, 500
         return {"message": "Control Failed"}, 400
