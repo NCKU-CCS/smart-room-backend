@@ -6,7 +6,7 @@ from loguru import logger
 from utils.start_up import update_gateways
 
 from utils.oauth import USER_AUTH, g
-from .model import Gateway
+from migrations.models import Gateway
 
 
 class GatewayResource(Resource):

@@ -1,8 +1,13 @@
+# Have to do that to let service know migration route
+# Note that it applied to all routes, so only need to do this once
+import sys
+sys.path.append('../')
+
 import json
 
 from loguru import logger
 
-from endpoints.gateway.model import Gateway
+from migrations.models import Gateway
 from config import SESSION, REDIS
 
 

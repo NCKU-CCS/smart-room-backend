@@ -6,8 +6,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import USER_AUTH, g
-from .model import ControlRecord
-from ..device.model import Device
+from migrations.models import ControlRecord, Device
 
 
 class ControlResource(Resource):

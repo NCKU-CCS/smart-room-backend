@@ -6,7 +6,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import USER_AUTH, g
-from .model import User
+from migrations.models import User
 
 
 class UserResource(Resource):

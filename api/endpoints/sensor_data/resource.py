@@ -3,7 +3,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import GW_AUTH, g, USER_AUTH
-from .model import SensorData
+from migrations.models import SensorData
 
 
 class SensorDataResource(Resource):

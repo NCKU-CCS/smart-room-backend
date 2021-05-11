@@ -4,7 +4,7 @@ from flask_restful import Resource, reqparse
 from loguru import logger
 
 from utils.oauth import USER_AUTH, g
-from .model import Device
+from migrations.models import Device
 
 
 class DeviceResource(Resource):
