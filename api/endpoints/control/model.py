@@ -1,13 +1,13 @@
 from dataclasses import dataclass
-
-from config import db
+from sqlalchemy import Column, String
+from config import BASE
 from utils.base_models import BaseMixin
 
 
 @dataclass
-class ControlRecord(db.Model, BaseMixin):
+class ControlRecord(BASE, BaseMixin):
     # TODO: Relationship: device -> Device.name; trigger -> user.name
     __tablename__ = "control_record"
-    command: str = db.Column(db.String(), unique=False, nullable=False)
-    device: str = db.Column(db.String(), unique=False, nullable=False)
-    trigger: str = db.Column(db.String(), unique=False, nullable=False)
+    command: str = Column(String(), unique=False, nullable=False)
+    device: str = Column(String(), unique=False, nullable=False)
+    trigger: str = Column(String(), unique=False, nullable=False)

@@ -6,7 +6,7 @@ from werkzeug.exceptions import HTTPException
 from werkzeug.exceptions import default_exceptions
 from dotenv import load_dotenv
 
-from config import db, APP_CONFIG
+from config import APP_CONFIG
 from endpoints import RESOURCES
 from utils.start_up import init_redis
 
@@ -50,9 +50,6 @@ def create_app(config_mode):
     # pylint: disable=E1101
     app.logger.info(f"APP Mode: {config_mode}")
     # pylint: enable=E1101
-
-    # DB Init
-    db.init_app(app)
 
     # Route Init
     api = Api(app)

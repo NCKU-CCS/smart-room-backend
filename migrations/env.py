@@ -5,6 +5,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from config import BASE
 
 from alembic import context
 
@@ -25,7 +26,7 @@ from flask import current_app
 config.set_main_option(
     'sqlalchemy.url', current_app.config.get(
         'SQLALCHEMY_DATABASE_URI').replace('%', '%%'))
-target_metadata = current_app.extensions['migrate'].db.metadata
+target_metadata = BASE.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

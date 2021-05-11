@@ -1,13 +1,14 @@
 from dataclasses import dataclass
 import secrets
 
-from config import db
+from sqlalchemy import Column, String
+from config import BASE
 from utils.base_models import BaseMixin
 
 
 @dataclass
-class User(db.Model, BaseMixin):
+class User(BASE, BaseMixin):
     __tablename__ = "user"
-    account: str = db.Column(db.String(), unique=True, nullable=False)
-    password: str = db.Column(db.String(), unique=False, nullable=False)
-    token: secrets.token_hex = db.Column(db.String(), unique=True, nullable=False)
+    account: str = Column(String(), unique=True, nullable=False)
+    password: str = Column(String(), unique=False, nullable=False)
+    token: secrets.token_hex = Column(String(), unique=True, nullable=False)

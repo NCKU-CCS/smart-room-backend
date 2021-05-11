@@ -1,16 +1,16 @@
 from dataclasses import dataclass
 
 from sqlalchemy.schema import UniqueConstraint
-
-from config import db
+from sqlalchemy import Column, String
+from config import BASE
 from utils.base_models import BaseMixin
 
 
 @dataclass
-class Sensor(db.Model, BaseMixin):
+class Sensor(BASE, BaseMixin):
     __tablename__ = "sensor"
-    name: str = db.Column(db.String(), nullable=False)
-    location: str = db.Column(db.String(), nullable=False)
-    room: str = db.Column(db.String(), nullable=False)
-    device_type: str = db.Column(db.String(), nullable=False)
+    name: str = Column(String(), nullable=False)
+    location: str = Column(String(), nullable=False)
+    room: str = Column(String(), nullable=False)
+    device_type: str = Column(String(), nullable=False)
     __table_args__ = (UniqueConstraint(name, location, room),)

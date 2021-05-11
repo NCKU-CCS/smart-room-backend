@@ -4,8 +4,8 @@ from loguru import logger
 from flask import g
 from flask_httpauth import HTTPTokenAuth
 
+from config import SESSION, REDIS
 from endpoints.user.model import User
-from config import REDIS
 
 
 GW_AUTH = HTTPTokenAuth(scheme="Bearer")
@@ -35,7 +35,7 @@ class UserAuth:
     @staticmethod
     @USER_AUTH.verify_token
     def verify_token(token):
-        user = User.query.filter_by(token=token).first()
+        user = SESSION.query(User).filter_by(token=token).first()
         if user:
             logger.info(f"[User OAUTH Success] User: {user.account}")
             g.uuid = user.uuid

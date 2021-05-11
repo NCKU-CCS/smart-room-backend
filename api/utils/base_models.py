@@ -3,10 +3,11 @@ from datetime import datetime, timezone
 
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import text as sa_text
+from sqlalchemy import Column
 import sqlalchemy.types as types
 from loguru import logger
 
-from config import db, TZ
+from config import TZ, SESSION
 
 
 # pylint: disable=W0223, W0613, R0201
@@ -39,35 +40,35 @@ def db_handler(func):
             return True
         except Exception as err:
             logger.error(f"DB Operation Failed.\nError: {err}")
-            db.session.rollback()
+            SESSION.rollback()
 
     return applicator
 
 
 @dataclass
 class BaseMixin:
-    uuid: UUID = db.Column(
+    uuid: UUID = Column(
         UUID2STR, primary_key=True, unique=True, nullable=False, server_default=sa_text("uuid_generate_v4()")
     )
-    created: datetime = db.Column(UTCDatetime, default=datetime.now)
+    created: datetime = Column(UTCDatetime, default=datetime.now)
 
     @db_handler
     def add(self):
-        db.session.add(self)
-        db.session.commit()
+        SESSION.add(self)
+        SESSION.commit()
 
     # pylint: disable=R0201
     @db_handler
     def update(self):
-        db.session.commit()
+        SESSION.commit()
 
     # pylint: enable=R0201
 
     @db_handler
     def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+        SESSION.delete(self)
+        SESSION.commit()
 
     @staticmethod
     def rollback():
-        db.session.rollback()
+        SESSION.rollback()

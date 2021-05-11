@@ -2,6 +2,7 @@ from flask import jsonify
 from flask_restful import Resource, reqparse
 from loguru import logger
 
+from config import SESSION
 from utils.oauth import USER_AUTH, g
 from .model import Sensor
 
@@ -47,7 +48,7 @@ class SensorResource(Resource):
         for argument in args:
             if args[argument]:
                 criteria.append(getattr(Sensor, argument) == args[argument])
-        return jsonify(Sensor.query.filter(*criteria).all())
+        return jsonify(SESSION.query(Sensor).filter(*criteria).all())
 
     # pylint: enable=R0201
 

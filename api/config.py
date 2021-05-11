@@ -2,7 +2,11 @@ import os
 
 import pytz
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.session import Session
+from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import redis
 
@@ -49,12 +53,12 @@ APP_CONFIG = {
 
 # pylint: disable=C0103
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
-    "DB_URL", "postgresql://postgres:password@localhost:5432/database"
-)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
 # pylint: enable=C0103
+ENGINE: Engine = create_engine(
+    os.environ.get("DB_URL", "postgresql://postgres:password@localhost:5432/database"), pool_pre_ping=True
+)
+SESSION: Session = sessionmaker(bind=ENGINE)()
+BASE = declarative_base()
 
 TZ = pytz.timezone(os.environ.get("TZ", "Asia/Taipei"))
 TZ_OFFSET = int(os.environ.get("TZ_OFFSET", 8))

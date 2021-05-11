@@ -9,7 +9,7 @@ from sqlalchemy.sql.functions import concat
 from sqlalchemy.dialects.postgresql import INTERVAL
 
 from utils.oauth import USER_AUTH, GW_AUTH, g
-from config import db, VOLTAGE, TZ_OFFSET, OUTDOOR_THERMO_SENSORS
+from config import SESSION, VOLTAGE, TZ_OFFSET, OUTDOOR_THERMO_SENSORS
 from .model import MeterData
 from ..sensor.model import Sensor
 from ..sensor_data.model import SensorData
@@ -50,7 +50,7 @@ class MeterDataResource(Resource):
         self.args = self.get_parser.parse_args()
         # Get Sensors
         sensors: list = (
-            db.session.query(Sensor.name, Sensor.room, Sensor.device_type)
+            SESSION.query(Sensor.name, Sensor.room, Sensor.device_type)
             .filter(Sensor.device_type.in_(["CT", "thermo_sensor"]))
             .all()
         )
@@ -111,14 +111,11 @@ class MeterDataResource(Resource):
         ]
         # CT Data
         meter_ct = (
-            db.session.query(MeterData.sensor, date, power)
-            .filter(*criteria)
-            .group_by(date, MeterData.sensor)
-            .subquery()
+            SESSION.query(MeterData.sensor, date, power).filter(*criteria).group_by(date, MeterData.sensor).subquery()
         )
         # Group Data By Date
         meter_sum = (
-            db.session.query(func.sum(meter_ct.c.power).label("power"), meter_ct.c.datetime.label("datetime"))
+            SESSION.query(func.sum(meter_ct.c.power).label("power"), meter_ct.c.datetime.label("datetime"))
             .group_by(meter_ct.c.datetime)
             .order_by(meter_ct.c.datetime)
             .all()
@@ -149,7 +146,7 @@ class MeterDataResource(Resource):
         # Thermo Sensor Data
         sensor_thermo = (
             # fmt: off
-            db.session.query(func.round(
+            SESSION.query(func.round(
                 cast(func.avg(SensorData.temperature), DECIMAL), 2
             ).label("temperature"), date)
             .filter(*criteria)
@@ -161,7 +158,7 @@ class MeterDataResource(Resource):
         return thermo_data
 
     @staticmethod
-    def simplify_date(column: db.column, time_format: str):
+    def simplify_date(column, time_format: str):
         date_tz = cast(column + func.cast(concat(TZ_OFFSET, " HOURS"), INTERVAL), TIMESTAMP)
         date = cast(func.to_char(date_tz, time_format), TIMESTAMP).label("datetime")
         return date
@@ -195,13 +192,13 @@ class MeterDataOverview(Resource):
     @staticmethod
     def get_overview():
         """Get latest power consumption data"""
-        ct_sensors = Sensor.query.filter(Sensor.device_type == "CT").all()
+        ct_sensors = SESSION.query(Sensor).filter(Sensor.device_type == "CT").all()
         ct_sensor_name = [sensor.name for sensor in ct_sensors]
         ct_room: dict = {sensor.name: sensor.room for sensor in ct_sensors}
         power = (MeterData.current * VOLTAGE).label("power")
         criteria = [MeterData.sensor.in_(ct_sensor_name), MeterData.created >= datetime.utcnow() - timedelta(minutes=5)]
         ct_data = (
-            db.session.query(MeterData.sensor, power)
+            SESSION.query(MeterData.sensor, power)
             .filter(*criteria)
             .order_by(MeterData.sensor, MeterData.created.desc())
             .distinct(MeterData.sensor)
