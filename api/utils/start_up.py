@@ -18,7 +18,6 @@ def init_redis():
         update_gateways()
     except Exception as err:
         logger.warning(f"[INIT REDIS]: {err}")
-        pass
 
 
 def update_gateways():
