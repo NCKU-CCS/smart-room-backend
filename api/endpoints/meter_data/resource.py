@@ -56,7 +56,7 @@ class MeterDataResource(Resource):
         try:
             sensor_info = {room: {"thermo_sensor": [], "CT": []} for room in rooms}
             sensor_info["overview"] = {
-                "thermo_sensor": [OUTDOOR_THERMO_SENSORS],
+                "thermo_sensor": OUTDOOR_THERMO_SENSORS,
                 "CT": [sensor.name for sensor in sensors if sensor.device_type == "CT"],
             }
             for sensor in sensors:

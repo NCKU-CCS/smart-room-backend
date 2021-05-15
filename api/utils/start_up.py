@@ -16,7 +16,8 @@ def init_redis():
     """Initialize Redis Data"""
     try:
         update_gateways()
-    except Exception:
+    except Exception as err:
+        logger.warning(f"[INIT REDIS]: {err}")
         pass
 
 
