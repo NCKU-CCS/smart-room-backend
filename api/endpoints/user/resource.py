@@ -6,7 +6,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import USER_AUTH, g
-from .model import User
+from migrations.models import User
 
 
 class UserResource(Resource):
@@ -55,12 +55,12 @@ class UserResource(Resource):
     def put(self):
         """Change User Password"""
         logger.info(f"[Put User Request]\nUser Account:{g.account}")
-        user = SESSION.query(User).filter_by(uuid=g.uuid).first()
+        user: User = SESSION.query(User).filter_by(uuid=g.uuid).first()
         args = self.put_parser.parse_args()
         if check_password_hash(user.password, args["original_password"]):
             user.password = generate_password_hash(args["new_password"])
             user.token = secrets.token_hex()
-            User.update(user)
+            user.update(SESSION)
             return {"message": "Accept", "token": user.token}
         return {"message": "Reject"}, 400
 
@@ -79,7 +79,7 @@ class UserResource(Resource):
             "password": generate_password_hash(args["password"]),
             "token": secrets.token_hex(),
         }
-        if User(**user).add():
+        if User(**user).add(SESSION):
             return {"message": "Account created", "token": user["token"]}, 201
         return {"error": "Account Create Failed"}, 400
 

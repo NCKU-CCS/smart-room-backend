@@ -1,17 +1,23 @@
+import sys
 import json
 
 from loguru import logger
 
-from endpoints.gateway.model import Gateway
 from config import SESSION, REDIS
+# Have to do that to let service know migration route
+# Note that it applied to all routes, so only need to do this once
+# pylint: disable=C0413
+sys.path.append('../')
+from migrations.models import Gateway  # noqa: E402
+# pylint: enable=C0413
 
 
 def init_redis():
     """Initialize Redis Data"""
     try:
         update_gateways()
-    except Exception:
-        pass
+    except Exception as err:
+        logger.warning(f"[INIT REDIS]: {err}")
 
 
 def update_gateways():

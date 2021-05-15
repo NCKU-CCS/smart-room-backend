@@ -18,8 +18,8 @@ Used to login platform.
 curl -X "POST" "http://140.116.247.124:10150/login" \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
-  "account": "netdb",
-  "password": "netdb2602"
+  "account": "test",
+  "password": "test"
 }'
 </pre>
 
@@ -550,8 +550,8 @@ curl -X "POST" "http://140.116.247.124:10150/control" \
             Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Gateway Authentication Bearer Token
 
     + Attributes
-        + device: "AC1" (string, required) - device name
-        + command: "25C" (string, required) - command
+        + device: AC1 (string, required) - device name
+        + command: 25C (string, required) - command
 
 + Response 200 (application/json)
     + Attributes

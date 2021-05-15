@@ -4,7 +4,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import USER_AUTH, g
-from .model import Sensor
+from migrations.models import Sensor
 
 
 class SensorResource(Resource):
@@ -59,7 +59,7 @@ class SensorResource(Resource):
         args = self.post_parser.parse_args()
         logger.info(f"[ADD Sensor] User: {g.account}")
         logger.debug(args)
-        if Sensor(**args).add():
+        if Sensor(**args).add(SESSION):
             return {"message": "Success"}
         return {"message": "Failed"}, 400
 

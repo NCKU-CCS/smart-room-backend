@@ -10,6 +10,9 @@ dev: init
 	pipenv install --dev
 	# pipenv run pre-commit install -t commit-msg
 
+migrate:
+	cd migrations && pipenv run alembic upgrade schema@heads
+
 service_up:
 	docker-compose run -d grafana && \
 	docker-compose run -d postgres && \

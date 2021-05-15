@@ -10,9 +10,7 @@ from sqlalchemy.dialects.postgresql import INTERVAL
 
 from utils.oauth import USER_AUTH, GW_AUTH, g
 from config import SESSION, VOLTAGE, TZ_OFFSET, OUTDOOR_THERMO_SENSORS
-from .model import MeterData
-from ..sensor.model import Sensor
-from ..sensor_data.model import SensorData
+from migrations.models import Sensor, SensorData, MeterData
 
 
 class MeterDataResource(Resource):
@@ -58,7 +56,7 @@ class MeterDataResource(Resource):
         try:
             sensor_info = {room: {"thermo_sensor": [], "CT": []} for room in rooms}
             sensor_info["overview"] = {
-                "thermo_sensor": [OUTDOOR_THERMO_SENSORS],
+                "thermo_sensor": OUTDOOR_THERMO_SENSORS,
                 "CT": [sensor.name for sensor in sensors if sensor.device_type == "CT"],
             }
             for sensor in sensors:
@@ -170,7 +168,7 @@ class MeterDataResource(Resource):
         logger.info(f"[Upload Data Request]\n GW: {g.gateway_name}")
         data = self.post_parser.parse_args()
         data["gateway"] = g.gateway_name
-        if MeterData(**data).add():
+        if MeterData(**data).add(SESSION):
             return {"message": "Success"}
         return {"message": "Failed"}, 400
 

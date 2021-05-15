@@ -8,13 +8,6 @@ Create Date: 2021-01-23 17:57:27.731237
 from alembic import op
 import sqlalchemy as sa
 
-
-# required if base_model or ModelMixin is used,
-# so that utils.base_model's class can be referenced.
-import sys
-sys.path.insert(0, "./smart_room")
-import utils
-
 # revision identifiers, used by Alembic.
 revision = '484ba956f0a7'
 down_revision = 'faa4c3bed519'
