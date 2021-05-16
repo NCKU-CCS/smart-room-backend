@@ -28,7 +28,10 @@ jobs:
     - name: Install Ubuntu dependencies
       run: |
         apt update && apt upgrade -y && apt install -y make redis-tools postgresql-client git
+    - name: Setup database
+      run: |
         git clone https://github.com/NCKU-CCS/smart-room-schema.git database
+        psql -f "database/sql/create_uuid_extension.sql" postgresql://postgres:password@postgres:5432/database
     - name: Install service dependencies
       run: |
         python -m pip install --upgrade pip
