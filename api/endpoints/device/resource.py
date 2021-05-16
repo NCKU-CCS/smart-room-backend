@@ -5,7 +5,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import USER_AUTH, g
-from migrations.models import Device
+from database.migrations.models import Device
 
 
 class DeviceResource(Resource):

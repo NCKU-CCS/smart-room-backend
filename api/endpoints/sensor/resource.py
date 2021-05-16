@@ -4,7 +4,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import USER_AUTH, g
-from migrations.models import Sensor
+from database.migrations.models import Sensor
 
 
 class SensorResource(Resource):

@@ -3,7 +3,7 @@ from loguru import logger
 
 from config import SESSION
 from utils.oauth import USER_AUTH, g
-from migrations.models.model import Sensor, SensorData, Device, ControlRecord
+from database.migrations.models.model import Sensor, SensorData, Device, ControlRecord
 
 
 class AppliancesResource(Resource):

@@ -8,7 +8,7 @@ from config import SESSION, REDIS
 # Note that it applied to all routes, so only need to do this once
 # pylint: disable=C0413
 sys.path.append('../')
-from migrations.models import Gateway  # noqa: E402
+from database.migrations.models import Gateway  # noqa: E402
 # pylint: enable=C0413
 
 

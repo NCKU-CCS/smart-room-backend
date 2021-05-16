@@ -5,7 +5,7 @@ from flask import g
 from flask_httpauth import HTTPTokenAuth
 
 from config import SESSION, REDIS
-from migrations.models import User
+from database.migrations.models import User
 
 
 GW_AUTH = HTTPTokenAuth(scheme="Bearer")
