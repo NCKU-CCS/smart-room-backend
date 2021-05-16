@@ -1,19 +1,5 @@
 version: '3.4'
 services:
-  postgres:
-    # checking connection: $ docker exec -it  DB_POSTGRES psql -U {POSTGRES_USER} -W {POSTGRES_DB}
-    image: postgres:13.1-alpine
-    container_name: DB_POSTGRES
-    restart: always
-    ports:
-      - 5432:5432
-    volumes:
-      - ./services/sql/:/docker-entrypoint-initdb.d/
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_ACCOUNT}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
   redis:
     image: redis:6
     container_name: REDIS
@@ -32,7 +18,6 @@ services:
     volumes:
       - ./services/grafana/:/etc/grafana/
       - grafana_data:/var/lib/grafana
-    restart: always
   smart-room:
     image: docker.pkg.github.com/ncku-ccs/smart-room-backend/dev:latest
     build: .
@@ -42,12 +27,9 @@ services:
     container_name: SMART_ROOM
     env_file: ./production_env
     depends_on:
-      - postgres
       - redis
 
 volumes:
-  postgres_data:
-    name: postgres_data
   redis_data:
     name: redis_data
   grafana_data:
