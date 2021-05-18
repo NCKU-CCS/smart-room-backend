@@ -45,6 +45,7 @@ run:
 	pipenv run python ${PKG}/app.py
 
 clean:
+	find . -type f -name '*.py[co]' -delete
 	find . -type d -name '__pycache__' -delete
 
 db_migrate:
