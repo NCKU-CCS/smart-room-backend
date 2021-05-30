@@ -10,7 +10,7 @@ from sqlalchemy.dialects.postgresql import INTERVAL
 
 from utils.oauth import USER_AUTH, GW_AUTH, g
 from config import SESSION, VOLTAGE, TZ_OFFSET, OUTDOOR_THERMO_SENSORS
-from migrations.models import Sensor, SensorData, MeterData
+from database.migrations.models import Sensor, SensorData, MeterData
 
 
 class MeterDataResource(Resource):

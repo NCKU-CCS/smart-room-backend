@@ -18,19 +18,28 @@ jobs:
           POSTGRES_PASSWORD: password
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Repository checkout
+      uses: actions/checkout@v2
     - name: Set up Python 3.7
       uses: actions/setup-python@v2
       with:
         python-version: 3.7
-    - name: Install dependencies
+    # Due to tech issue, have to use clone rather than submodule pull
+    - name: Install Ubuntu dependencies
       run: |
-        ls -la
         apt update && apt upgrade -y && apt install -y make redis-tools postgresql-client git
+    - name: Setup database
+      run: |
+        git clone https://github.com/NCKU-CCS/smart-room-schema.git database
+        psql -f "database/sql/create_uuid_extension.sql" postgresql://postgres:password@postgres:5432/database
+    - name: Install service dependencies
+      run: |
         python -m pip install --upgrade pip
         pip install pipenv
         redis-cli -h redis CONFIG SET requirepass "password"
-        make dev
+        pipenv install --dev
+        export DB_URL=postgresql://postgres:password@postgres:5432/database
+        cd database && make init && make migrate
     - name: run linting command
       run: |
         make lint

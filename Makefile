@@ -5,22 +5,21 @@ PKG=api
 init: clean
 	pipenv --python 3.7
 	pipenv install
+	git submodule update --init --remote
 
 dev: init
 	pipenv install --dev
 	# pipenv run pre-commit install -t commit-msg
 
-migrate:
-	cd migrations && pipenv run alembic upgrade schema@heads
-
 service_up:
+	cd database && make service_up && sleep 1 && make migrate
 	docker-compose run -d grafana && \
-	docker-compose run -d postgres && \
 	docker-compose run -d redis
 
 service_down:
+	cd database && make service_down
 	docker-compose down && \
-	docker volume rm postgres_data redis_data grafana_data
+	docker volume rm redis_data grafana_data
 
 commit:
 	pipenv run cz commit

@@ -7,7 +7,7 @@ from utils.start_up import update_gateways
 from utils.oauth import USER_AUTH, g
 
 from config import SESSION
-from migrations.models import Gateway
+from database.migrations.models import Gateway
 
 
 class GatewayResource(Resource):
