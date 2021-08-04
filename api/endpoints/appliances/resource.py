@@ -15,6 +15,7 @@ class AppliancesResource(Resource):
 
     def _set_get_parser(self):
         self.get_parser = reqparse.RequestParser()
+        self.get_parser.add_argument("name", type=str, required=False, location="values")
         self.get_parser.add_argument("room", type=str, required=False, location="values")
         self.get_parser.add_argument("location", type=str, required=False, location="values")
 
