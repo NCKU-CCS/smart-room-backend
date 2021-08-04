@@ -123,3 +123,9 @@ algorithm/
 
 # analysis
 analysis/
+
+# db
+db/
+
+# production env
+production_env

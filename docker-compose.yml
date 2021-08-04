@@ -1,0 +1,36 @@
+version: '3.4'
+services:
+  redis:
+    image: redis:6
+    container_name: REDIS
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./services/grafana/:/etc/grafana/
+      - grafana_data:/var/lib/grafana
+  smart-room:
+    image: docker.pkg.github.com/ncku-ccs/smart-room-backend/dev:latest
+    build: .
+    restart: always
+    ports:
+      - 5000:5000
+    container_name: SMART_ROOM
+    env_file: ./production_env
+    depends_on:
+      - redis
+
+volumes:
+  redis_data:
+    name: redis_data
+  grafana_data:
+    name: grafana_data
