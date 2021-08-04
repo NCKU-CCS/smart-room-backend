@@ -1,4 +1,4 @@
-# smart room
+# smart room - backend
 
 ![Integration](https://github.com/NCKU-CCS/smart-room-backend/workflows/Integration/badge.svg)
 
@@ -6,27 +6,33 @@
 
 Smart Room Control and Data Collect Service
 
-+ [front end](https://github.com/NCKU-CCS/smart-room-frontend)
-
 + [api](./api): Main API Server
     + Flask API Server
-    + Data Collect
+    + Data Collection
     + Device Control
     + User Management
 
-+ [controller](https://github.com/NCKU-CCS/smart-room-controller): A/C Controller
-    + Socket Server
-    + Receive Command
-    + Token Authentication
-    + IR Remote Control
++ Redis Server
 
-+ [sensor](https://github.com/NCKU-CCS/smart-room-sensor): Sensors
-    + Python3.7 Script and Arduino Script
-    + Data Collect
-        + [meter.py](./sensor/meter.py): Smart Meter via Modbus Communication
-        + [thermo_sensor.py](./sensor/thermo_sensor.py): DHT Temperature and Humidity Sensor
-        + [sct-013.ino](./sensor/Arduino/sct013.ino): SCT-013 GET Current Data using Arduino
-        + [read_arduino.py](./sensor/read_arduino.py): Read CT data from Arduino via serial signal
++ Grafana
+
++ Relative Projects
+
+    + [Database](https://github.com/NCKU-CCS/smart-room-schema)
+
+    + [front end](https://github.com/NCKU-CCS/smart-room-frontend)
+
+    + [controller](https://github.com/NCKU-CCS/smart-room-controller): A/C Controller
+        + Socket Server
+        + Receive Command
+        + Token Authentication
+        + IR Remote Control
+
+    + [sensor](https://github.com/NCKU-CCS/smart-room-sensor): Sensors
+        + Data Collectction
+        + Thermo Sensor
+        + Smart Meter
+        + CT Sensor
 
 ## API Document
 
@@ -41,6 +47,13 @@ Online Document: [smart-room document](https://smartroom1.docs.apiary.io/#)
 - python 3.7
 - docker 19.03.6
 
+### DB Service
+[Database](https://github.com/NCKU-CCS/smart-room-schema)
+
+Update submodule files
+```sh
+git submodule update --init --remote
+```
 
 ### Running Development
 
@@ -104,3 +117,10 @@ To stamp existing database to certain revision version
 `python api/manage.py db stamp {revision ID / head}`
 
 command reference: [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/#command-reference)
+
+## Usage
+
+### Add a sensor with new gateway
+1. Add Gateway
+2. Add Sensor
+3. Start to Upload Data
