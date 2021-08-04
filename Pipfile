@@ -7,11 +7,11 @@ verify_ssl = true
 pytest = "==6.1.2"
 pytest-cov = "==2.10.1"
 pytest-flask = "==1.1.0"
-pylint = "==2.3.1"
-flake8 = "==3.7.8"
-black = "==19.3b0"
-pre-commit = "==2.5.1"
-mypy = "==0.790"
+pylint = "==2.4.4"
+flake8 = "==3.7.9"
+black = "==19.10b0"
+pre-commit = "==2.10.1"
+mypy = "==0.910"
 isort = "==4.3.21"
 
 [packages]
