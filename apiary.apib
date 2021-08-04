@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://140.116.247.124:10150
+HOST: http://netdb.udc-service.io:10150
 
 # SMART ROOM API Document
 
@@ -7,7 +7,7 @@ Smart Room back-end API
 
 API-version: 0.0.2
 
-# Common
+# Group User Management
 
 ## Login [/login]
 
@@ -15,7 +15,7 @@ Used to login platform.
 
 ### Login [POST]
 <pre>
-curl -X "POST" "http://140.116.247.124:10150/login" \
+curl -X "POST" "http://netdb.udc-service.io:10150/login" \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "account": "test",
@@ -45,7 +45,7 @@ User Account Management
 Get user data.
 
 <pre>
-curl "http://140.116.247.124:10150/user" \
+curl "http://netdb.udc-service.io:10150/user" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
 </pre>
 
@@ -72,7 +72,7 @@ curl "http://140.116.247.124:10150/user" \
 Create user account.
 
 <pre>
-curl -X "POST" "http://140.116.247.124:10150/user" \
+curl -X "POST" "http://netdb.udc-service.io:10150/user" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
@@ -108,7 +108,7 @@ curl -X "POST" "http://140.116.247.124:10150/user" \
 Update user password.
 
 <pre>
-curl -X "PUT" "http://140.116.247.124:10150/user" \
+curl -X "PUT" "http://netdb.udc-service.io:10150/user" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
@@ -139,21 +139,24 @@ curl -X "PUT" "http://140.116.247.124:10150/user" \
     + Attributes
         + error: `Access Denied` - error message
 
+# Group Device Management
+
 ## Sensor [/sensor]
 
 Sensor Management
 
-### Get Sensors [GET /sensor{?name,location,device_type}]
+### Get Sensors [GET /sensor{?name,room,location,device_type}]
 
 Get sensors.
 
 <pre>
-curl "http://140.116.247.124:10150/sensor?name=Sensor1&location=floor1&device_type=DHT11" \
+curl "http://netdb.udc-service.io:10150/sensor?name=Sensor1&room=Room1&location=floor1&device_type=DHT11" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
 </pre>
 
 + Parameters
     + name: `Sensor1` (string) - sensor name
+    + room: `Room1` (string) - room name
     + location: `floor1` (string) - sensor location
     + device_type: `DHT11` (string) - sensor device type
 
@@ -166,6 +169,7 @@ curl "http://140.116.247.124:10150/sensor?name=Sensor1&location=floor1&device_ty
     + Attributes
         + uuid: `31ca7c42-a125-11eb-99de-8c8590002bb6` (string) - sensor uuid
         + name: `Sensor1` (string) - sensor name
+        + room: `Room1` (string) - room name
         + location: `floor1` (string) - sensor location
         + device_type: `DHT11` (string) - sensor device type
         + created: `Wed, 17 Feb 2021 13:43:26 GMT` (string) - sensor create time
@@ -183,11 +187,12 @@ curl "http://140.116.247.124:10150/sensor?name=Sensor1&location=floor1&device_ty
 Create sensor.
 
 <pre>
-curl -X "POST" "http://140.116.247.124:10150/sensor" \
+curl -X "POST" "http://netdb.udc-service.io:10150/sensor" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "name": "Sensor2",
+  "room": "Room2",
   "location": "floor2",
   "device_type": "DHT22"
 }'
@@ -201,6 +206,7 @@ curl -X "POST" "http://140.116.247.124:10150/sensor" \
 
     + Attributes
         + name: `Sensor2` (string, required) - sensor name
+        + room: `Room2` (string, required) - room name
         + location: `floor2` (string, required) - sensor location
         + device_type: `DHT22` (string, required) - sensor device type
 
@@ -212,22 +218,108 @@ curl -X "POST" "http://140.116.247.124:10150/sensor" \
     + Attributes
         + error: `Access Denied` - error message
 
+## Gateway [/gateway]
+
+Gateway (data uploader) management
+
+### Create Gateway [POST]
+
+Create Gateway.
+
+<pre>
+curl -X "POST" "http://netdb.udc-service.io:10150/gateway" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "name": "GW"
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Gateway Authentication Bearer Token
+
+    + Attributes
+        + name: `GW` (string, required) - gateway name
+        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` (string) - gateway token
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `success` - success
+        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` - gateway token
+
++ Response 400 (application/json)
+    + Attributes
+        + error: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+## Device [/device]
+
+Controllable device management
+
+### Create Device [POST]
+
+Create AC Device.
+
+<pre>
+curl -X "POST" "http://netdb.udc-service.io:10150/device" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "name": "AC",
+  "room": "room1",
+  "location": "loc_N",
+  "url": "localhost:7000"
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
+    + Attributes
+        + name: `AC` (string, required) - device name
+        + room: `room1` (string, required) - room name
+        + location: `loc_N` (string, required) - location name
+        + url: `localhost:7000` (string, required) - device socket url
+        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` (string) - device token
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - success
+
++ Response 400 (application/json)
+    + Attributes
+        + error: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
+# Group Data
+
 ## Sensor Data [/sensor_data]
 
 Sensor Data
 
-### Get Sensor Data [GET /sensor_data{?name,location}]
+### Get Sensor Data [GET /sensor_data{?name}]
 
 Get sensors.
 
 <pre>
-curl "http://140.116.247.124:10150/sensor_data?name=Sensor1&location=floor1" \
+curl "http://netdb.udc-service.io:10150/sensor_data?name=Sensor1" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
 </pre>
 
 + Parameters
     + name: `Sensor1` (string) - sensor name
-    + location: `floor1` (string) - sensor location
 
 + Request (application/json)
     + Headers
@@ -252,7 +344,7 @@ curl "http://140.116.247.124:10150/sensor_data?name=Sensor1&location=floor1" \
 Upload sensor Data.
 
 <pre>
-curl -X "POST" "http://140.116.247.124:10150/sensor_data" \
+curl -X "POST" "http://netdb.udc-service.io:10150/sensor_data" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
@@ -285,41 +377,12 @@ curl -X "POST" "http://140.116.247.124:10150/sensor_data" \
 
 Meter Data
 
-### Get Meter Data Overview [GET /meter_data/overview]
-
-Get meter data overview.
-
-<pre>
-curl "http://140.116.247.124:10150/meter_data/overview" \
-     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
-</pre>
-
-+ Request (application/json)
-    + Headers
-
-            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
-
-+ Response 200 (application/json)
-    + Attributes
-        + total: 100.0 (number, required) - total power consumption
-        + data
-            + 602: 60.0 (number, required) - 602 power consumption
-            + 608: 40.0 (number, required) - 608 power consumption
-
-+ Response 400 (application/json)
-    + Attributes
-        + message: `Failed` - error message
-
-+ Response 401 (application/json)
-    + Attributes
-        + error: `Access Denied` - error message
-
 ### Get Meter Data [GET /meter_data{?start_time,end_time,interval}]
 
-Get meter data overview.
+Get meter data.
 
 <pre>
-curl "http://140.116.247.124:10150/meter_data?" \
+curl "http://netdb.udc-service.io:10150/meter_data?" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
 </pre>
 
@@ -382,7 +445,7 @@ curl "http://140.116.247.124:10150/meter_data?" \
 Upload Meter Data.
 
 <pre>
-curl -X "POST" "http://140.116.247.124:10150/meter_data" \
+curl -X "POST" "http://netdb.udc-service.io:10150/meter_data" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
@@ -415,86 +478,6 @@ curl -X "POST" "http://140.116.247.124:10150/meter_data" \
     + Attributes
         + error: `Access Denied` - error message
 
-## Gateway [/gateway]
-
-Gateway management
-
-### Create Gateway [POST]
-
-Create Gateway.
-
-<pre>
-curl -X "POST" "http://140.116.247.124:10150/gateway" \
-     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
-     -H 'Content-Type: application/json; charset=utf-8' \
-     -d $'{
-  "name": "GW"
-}'
-
-</pre>
-
-+ Request (application/json)
-    + Headers
-
-            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Gateway Authentication Bearer Token
-
-    + Attributes
-        + name: `GW` (string, required) - gateway name
-        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` (string) - gateway token
-
-+ Response 200 (application/json)
-    + Attributes
-        + message: `success` - success
-        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` - gateway token
-
-+ Response 400 (application/json)
-    + Attributes
-        + error: `Failed` - error message
-
-+ Response 401 (application/json)
-    + Attributes
-        + error: `Access Denied` - error message
-
-## Device [/device]
-
-Device management
-
-### Create Device [POST]
-
-Create AC Device.
-
-<pre>
-curl -X "POST" "http://140.116.247.124:10150/device" \
-     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
-     -H 'Content-Type: application/json; charset=utf-8' \
-     -d $'{
-  "name": "AC",
-  "url": "localhost:7000"
-}'
-
-</pre>
-
-+ Request (application/json)
-    + Headers
-
-            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
-
-    + Attributes
-        + name: `AC` (string, required) - device name
-        + url: `localhost:7000` (string, required) - device socket url
-        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` (string) - device token
-
-+ Response 200 (application/json)
-    + Attributes
-        + message: `Success` - success
-
-+ Response 400 (application/json)
-    + Attributes
-        + error: `Failed` - error message
-
-+ Response 401 (application/json)
-    + Attributes
-        + error: `Access Denied` - error message
 
 ## Control Record [/control]
 
@@ -505,7 +488,7 @@ Control Record
 Get latest control record.
 
 <pre>
-curl "http://140.116.247.124:10150/control?device=AC1" \
+curl "http://netdb.udc-service.io:10150/control?device=AC1" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
 </pre>
 
@@ -534,7 +517,7 @@ curl "http://140.116.247.124:10150/control?device=AC1" \
 Send Control Command.
 
 <pre>
-curl -X "POST" "http://140.116.247.124:10150/control" \
+curl -X "POST" "http://netdb.udc-service.io:10150/control" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
@@ -569,6 +552,8 @@ curl -X "POST" "http://140.116.247.124:10150/control" \
     + Attributes
         + error: `Control Success, Save Failed` - error message
 
+# Group Front-end
+
 ## Appliances Data [/appliance]
 
 Get Appliances Latest State
@@ -578,7 +563,7 @@ Get Appliances Latest State
 Get appliances latest status.
 
 <pre>
-curl "http://140.116.247.124:10150/appliance?room=608" \
+curl "http://netdb.udc-service.io:10150/appliance?room=608" \
      -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
 </pre>
 
@@ -620,6 +605,38 @@ curl "http://140.116.247.124:10150/appliance?room=608" \
     + Attributes
         + error: `Access Denied` - error message
 
+## Meter Data Overview [/meter_data/overview]
+
+
+### Get Meter Data Overview [GET]
+
+[Front-end] Get meter data overview.
+
+<pre>
+curl "http://netdb.udc-service.io:10150/meter_data/overview" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR'
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
++ Response 200 (application/json)
+    + Attributes
+        + total: 100.0 (number, required) - total power consumption
+        + data
+            + 602: 60.0 (number, required) - 602 power consumption
+            + 608: 40.0 (number, required) - 608 power consumption
+
++ Response 400 (application/json)
+    + Attributes
+        + message: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
 # Group Service
 
 ## Service Health check [/health]
@@ -629,7 +646,7 @@ curl "http://140.116.247.124:10150/appliance?room=608" \
 Return basic response, used to check service status
 
 <pre>
-curl "http://140.116.247.124:10150/health"
+curl "http://netdb.udc-service.io:10150/health"
 </pre>
 
 + Response 200 (application/json)
