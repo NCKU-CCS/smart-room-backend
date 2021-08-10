@@ -42,7 +42,7 @@ build:
 	docker-compose build
 
 run:
-	pipenv run python ${PKG}/app.py
+	cd ${PKG} && pipenv run python app.py
 
 clean:
 	find . -type f -name '*.py[co]' -delete

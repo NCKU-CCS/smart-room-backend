@@ -102,22 +102,6 @@ make build
 docker-compose up -d
 ```
 
-### Database Migration
-
-Init:
-`python api/manage.py db init`
-
-To make migration change:
-`python api/manage.py db migrate`
-
-To apply migration changes to database:
-`python api/manage.py db upgrade`
-
-To stamp existing database to certain revision version
-`python api/manage.py db stamp {revision ID / head}`
-
-command reference: [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/#command-reference)
-
 ## Usage
 
 ### Add a sensor with new gateway
