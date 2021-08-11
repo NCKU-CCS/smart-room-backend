@@ -170,7 +170,7 @@ class MeterDataResource(Resource):
         data = self.post_parser.parse_args()
         data["gateway"] = g.gateway_name
         # TODO: remove this if-else statement
-        if data["total_current"] and not data["total_consumption"]:
+        if data["total_current"] is not None and data["total_consumption"] is None:
             data["total_consumption"] = data.pop("total_current")
         logger.debug(data)
         if MeterData(**data).add(SESSION):
