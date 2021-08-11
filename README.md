@@ -55,6 +55,11 @@ Update submodule files
 git submodule update --init --remote
 ```
 
+When DB schema update, don't forget to update submodule
+```sh
+git submodule update --remote
+```
+
 ### Running Development
 
 1. Create environment file
