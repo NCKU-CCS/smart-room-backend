@@ -31,12 +31,11 @@ class MeterDataResource(Resource):
 
     def _set_post_parser(self):
         self.post_parser = reqparse.RequestParser()
-        data_arguments = ["voltage", "current", "power", "total_current", "total_consumption"]
+        data_arguments = ["voltage", "current", "power", "total_consumption"]
         for arg in data_arguments:
             self.post_parser.add_argument(
-                arg, type=float, required=False, location="json", help=f"Upload Data: {arg} is required"
+                arg, type=float, required=True, location="json", help=f"Upload Data: {arg} is required"
             )
-        # TODO: Set required to True and remove total_current
         self.post_parser.add_argument(
             "sensor", type=str, required=True, location="json", help="Upload Data: sensor is required"
         )
@@ -169,11 +168,6 @@ class MeterDataResource(Resource):
         logger.info(f"[Upload Data Request]\n GW: {g.gateway_name}")
         data = self.post_parser.parse_args()
         data["gateway"] = g.gateway_name
-        # TODO: remove this if-else statement
-        if data["total_current"] is not None and data["total_consumption"] is None:
-            data["total_consumption"] = data["total_current"]
-        del data["total_current"]
-        logger.debug(data)
         if MeterData(**data).add(SESSION):
             return {"message": "Success"}
         return {"message": "Failed"}, 400
