@@ -5,7 +5,7 @@ HOST: http://netdb.udc-service.io:10150
 
 Smart Room back-end API
 
-API-version: 0.1.0
+API-version: 0.2.0
 
 # Group User Management
 
@@ -452,7 +452,7 @@ curl -X "POST" "http://netdb.udc-service.io:10150/meter_data" \
   "voltage": 218.204,
   "current": 0.139,
   "power": 8.638,
-  "total_current": 17.368,
+  "total_consumption": 17.368,
   "sensor": "SmartMeter"
 }'
 
@@ -467,7 +467,7 @@ curl -X "POST" "http://netdb.udc-service.io:10150/meter_data" \
         + voltage: 218.204 (number, required) - voltage
         + current: 0.139 (number, required) - current
         + power: 8.638 (number, required) - power
-        + total_current: 17.368 (number, required) - total_current
+        + total_consumption: 17.368 (number, required) - total_consumption
         + sensor: `SmartMeter` (string, required) - sensor name
 
 + Response 200 (application/json)

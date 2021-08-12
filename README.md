@@ -55,6 +55,11 @@ Update submodule files
 git submodule update --init --remote
 ```
 
+When DB schema update, don't forget to update submodule
+```sh
+git submodule update --remote
+```
+
 ### Running Development
 
 1. Create environment file
@@ -101,22 +106,6 @@ make build
 ```sh
 docker-compose up -d
 ```
-
-### Database Migration
-
-Init:
-`python api/manage.py db init`
-
-To make migration change:
-`python api/manage.py db migrate`
-
-To apply migration changes to database:
-`python api/manage.py db upgrade`
-
-To stamp existing database to certain revision version
-`python api/manage.py db stamp {revision ID / head}`
-
-command reference: [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/#command-reference)
 
 ## Usage
 

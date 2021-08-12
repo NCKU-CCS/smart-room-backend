@@ -31,7 +31,7 @@ class MeterDataResource(Resource):
 
     def _set_post_parser(self):
         self.post_parser = reqparse.RequestParser()
-        data_arguments = ["voltage", "current", "power", "total_current"]
+        data_arguments = ["voltage", "current", "power", "total_consumption"]
         for arg in data_arguments:
             self.post_parser.add_argument(
                 arg, type=float, required=True, location="json", help=f"Upload Data: {arg} is required"
