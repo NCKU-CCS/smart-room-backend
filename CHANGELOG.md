@@ -1,3 +1,9 @@
+## 0.2.0 (2021-08-12)
+
+### Feat
+
+- **meter_data**: update upload column (#18)
+
 ## 0.1.0 (2021-08-04)
 
 ### Refactor
