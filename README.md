@@ -51,12 +51,12 @@ Online Document: [smart-room document](https://smartroom1.docs.apiary.io/#)
 [Database](https://github.com/NCKU-CCS/smart-room-schema)
 
 Update submodule files
-```sh
+```sh=
 git submodule update --init --remote
 ```
 
-When DB schema update, don't forget to update submodule
-```sh
+When DB schema update, don't forget to update the submodule version
+```sh=
 git submodule update --remote
 ```
 
@@ -112,4 +112,4 @@ docker-compose up -d
 ### Add a sensor with new gateway
 1. Add Gateway
 2. Add Sensor
-3. Start to Upload Data
+3. Start to upload data with gateway token
