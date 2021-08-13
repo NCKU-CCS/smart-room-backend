@@ -19,7 +19,7 @@ class PirRecordsResource(Resource):
             "device_id", type=str, required=True, location="json", help="Upload Pir: device_id is required"
         )
         self.post_parser.add_argument(
-            "created", type=str, required=True, location="json", help="Upload Pir: device_id is required"
+            "created", type=str, required=True, location="json", help="Upload Pir: created is required"
         )
         self.post_parser.add_argument(
             "status", type=int, required=True, location="json", help="Upload Pir: status is required"
