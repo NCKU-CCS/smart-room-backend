@@ -552,6 +552,49 @@ curl -X "POST" "http://netdb.udc-service.io:10150/control" \
     + Attributes
         + error: `Control Success, Save Failed` - error message
 
+## Pir Records [/pir_records]
+
+Motion Sensor Data
+
+### Upload Pir Data [POST]
+
+Upload Pir Data.
+
+<pre>
+curl -X "POST" "http://netdb.udc-service.io:10150/pir_records" \
+     -H 'Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR' \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{
+  "created": "2021-08-12T07:56:34.158830",
+  "device_id": "TEST:DEVICE",
+  "status": "0"
+}'
+
+</pre>
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer OXBiogjCfdKb7m9CEOPhpbjjv0n5OtfltzgMJbSxbP7jVFY8XUNzHqkGidDumQSR - Authentication Bearer Token
+
+    + Attributes
+        + device_id: `TEST:DEVICE` (string, required) - device Mac address
+        + created: `2021-08-12T07:56:34.158830` (string, required) - data timestamp
+        + status: `0` (number, required) - pir status
+        + token: `d43b634aff32f2ab0bb670d94307570955057c03747f37556c4e334b7072c68c` (string) - device token
+
++ Response 200 (application/json)
+    + Attributes
+        + message: `Success` - success
+
++ Response 400 (application/json)
+    + Attributes
+        + error: `Failed` - error message
+
++ Response 401 (application/json)
+    + Attributes
+        + error: `Access Denied` - error message
+
 # Group Front-end
 
 ## Appliances Data [/appliance]

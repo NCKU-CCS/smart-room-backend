@@ -4,11 +4,13 @@ import json
 from loguru import logger
 
 from config import SESSION, REDIS
+
 # Have to do that to let service know migration route
 # Note that it applied to all routes, so only need to do this once
 # pylint: disable=C0413
 sys.path.append('../')
 from database.migrations.models import Gateway  # noqa: E402
+
 # pylint: enable=C0413
 
 

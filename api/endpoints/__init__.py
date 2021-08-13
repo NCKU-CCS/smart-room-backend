@@ -7,6 +7,7 @@ from endpoints.device.resource import DeviceResource
 from endpoints.control.resource import ControlResource
 from endpoints.appliances.resource import AppliancesResource
 from endpoints.health.resource import HealthResource
+from endpoints.pir_records.resource import PirRecordsResource
 
 
 RESOURCES = {
@@ -21,4 +22,5 @@ RESOURCES = {
     "health": HealthResource,
     "sensor": SensorResource,
     "appliance": AppliancesResource,
+    "pir_records": PirRecordsResource,
 }
