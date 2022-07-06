@@ -8,6 +8,7 @@ from endpoints.control.resource import ControlResource
 from endpoints.appliances.resource import AppliancesResource
 from endpoints.health.resource import HealthResource
 from endpoints.pir_records.resource import PirRecordsResource
+from endpoints.raw.meter_data.resource import RawMeterDataResource
 
 
 RESOURCES = {
@@ -23,4 +24,5 @@ RESOURCES = {
     "sensor": SensorResource,
     "appliance": AppliancesResource,
     "pir_records": PirRecordsResource,
+    "raw/meter_data": RawMeterDataResource,
 }
